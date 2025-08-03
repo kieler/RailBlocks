@@ -1,0 +1,59 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background: lightgray;
+}
+
+.container {
+  display: flex;
+  /* justify-content: space-between; */
+  flex-wrap: wrap;
+  gap: 10px;
+  height: 100vh;
+}
+
+.box {
+    flex: 1 1 auto;
+    background: lightgray;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: auto;
+    height: 100%;
+}
+
+/*noinspection CssUnusedSymbol*/
+.blocklyFlyoutLabelText {
+    font-size: 16pt !important;
+}
+
+.file-label {
+    display: inline-block;
+    padding: 2px 6px;
+    font-family: Arial, sans-serif;
+    font-size: 14pt;
+    border: 1px solid gray;
+    border-radius: 4px;
+    background: #e7e7eb;
+}
+
+.file-label:hover {
+    background: lightgray;
+}
+
+#blocklyDiv {
+    width: auto;
+    height: 100dvh;
+    border: 10px solid lightgray;
+}
+
+#output, .code {
+    font: 10pt "Cascadia Code", monospace;
+    padding: 10px;
+    white-space: pre-wrap;
+}
+
+#file_load {
+    display: none;
+}

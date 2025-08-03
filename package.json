@@ -1,0 +1,24 @@
+{
+  "name": "blockly-for-railsl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "concurrently \"npm:frontend\" \"npm:backend\"",
+    "frontend": "vite ./frontend/",
+    "backend": "cd backend && node backend.js"
+  },
+  "author": "Henri Heyden",
+  "type": "module",
+  "dependencies": {
+    "blockly": "^12.2.0",
+    "concurrently": "^9.1.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "package.json": "^0.0.0",
+    "vite": "^6.3.4"
+  },
+  "devDependencies": {
+    "typescript-eslint": "^8.34.1"
+  }
+}

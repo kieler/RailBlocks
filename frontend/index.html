@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<head>
+    <title> RailBlocks </title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icons/favicon.png" type="image/x-icon">
+</head>
+
+<body>
+    <div style='position: absolute; top: 1dvh; right: 1dvw; z-index: 1; background: white'>
+        <h1> RailBlocks </h1>
+        <!-- <img src="icons/favicon.ico" style="width:80px;height:80px;" alt="Blockly for RailSL Logo"> -->
+
+        <!-- Buttons that send signals to backend -->
+        <button id="button_sim" style="font-family: arial, sans-serif; font-size: 14pt" title="Simulate">
+            <img src="icons/train.svg" style="width:19px;height:19px" alt="Simulate">
+        </button>
+        <button id="button_run" style="font-family: arial, sans-serif; font-size: 14pt" title="Deploy on railway">
+            <img src="icons/train-execute.svg" style="width:19px;height:19px" alt="Deploy on railway">
+        </button>
+
+        <!-- Buttons to save and load a workspace -->
+        <button id="button_save" style="font-family: arial, sans-serif; font-size: 14pt" title="Save current workspace to disk">
+            <img src="icons/disk.svg" style="width:19px;height:19px" alt="Save current workspace to disk">
+        </button>
+        <label for="file_load" class="file-label" style="font-family: arial, sans-serif; font-size: 14pt; display: inline-block" title="Load workspace from disk">
+            <img src="icons/file-import.svg" style="width:19px;height:19px" alt="Load workspace from disk">
+        </label>
+        <input type="file" id="file_load" accept="application/json"/>
+        <button id="button_options" style="font-family: arial, sans-serif; font-size: 14pt" title="View developer information">
+            <img src="icons/settings.svg" style="width:19px;height:19px" alt="View developer information">
+        </button>
+
+        <br>
+
+        <img src="icons/hourglass.gif" style="width: 10dvh; height: 10dvh; display: none" id="running_animation">
+    </div>
+
+    <!-- Div blockly is inserted into -->
+    <div id="blocklyDiv"></div>
+
+    <!-- Dev-Div -->
+    <div id="devDiv" style="position: absolute; bottom: 1dvh; right: 1dvw; padding:5px; background: white; border: 2px solid lightgray; overflow: scroll; width: 20dvw; height: 85dvh; z-index: -1">
+        <h2>Generated RailSL</h2>
+        <div class="code" id="generated code">Start:
+
+    End.</div>
+        <h2>Logs</h2>
+        <pre id="output"></pre>
+
+        <h2>Attributions</h2>
+        Images created/distributed by user jucy_fish (train icon), Freepik (hourglass gif) and <a href="https://www.flaticon.com/" title="icons source">Flaticon.</a>
+    </div>
+
+    <!-- Load everything JavaScript-related, which has to be done after the blockly-div is initialized. -->
+    <script type="module" src="main.js"></script>
+</body>
