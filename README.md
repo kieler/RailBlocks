@@ -1,5 +1,5 @@
 # RailBlocks
-## A Blockly RailSL Implementation
+#### A Blockly RailSL Implementation
 _RailBlocks_ is a visual programming language (VPL) and integrated development environment (IDE) using Google Blockly that translates to _RailSL_ (the Railway-specific language), a textual domain-specific language, used by the Kieler University to teach about real-time and embedded systems.
 
 The VPL is designed to simplify the original RailSL grammar to make it usable by anyone.
@@ -23,3 +23,6 @@ The VPL is designed to simplify the original RailSL grammar to make it usable by
 ### Installation
 1. Install npm dependencies with `npm install`.
 2. Start with `npm run start`.
+
+#### Attributions
+Icons and animations created by user jucy_fish (train icon), Freepik (hourglass gif) and distributed by [Flaticon](https://www.flaticon.com).
