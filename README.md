@@ -10,6 +10,8 @@ The VPL is designed to simplify the original RailSL grammar to make it usable by
 - Automatic simulation and deployment of generated RailSL code
 - Visual warnings and tooltips for each block
 
+![IDE Screenshot](https://i.imgur.com/LLmYfnN.png "IDE")
+
 ### Requirements
 - Linux-based operating system, tested on Arch Linux and Ubuntu 24.04 LTS
 - Node.js, tested versions: `24.1.0`, `22.16.0`
@@ -21,8 +23,9 @@ The VPL is designed to simplify the original RailSL grammar to make it usable by
 - A Java runtime in PATH, tested with Ubuntu's `openjdk-21-jre` package.
 
 ### Installation
-1. Install npm dependencies with `npm install`.
-2. Start with `npm run start`.
+1. Clone this repository and cd into it.
+2. Install npm dependencies with `npm install`.
+3. Start with `npm run start`.
 
 #### Attributions
 Icons and animations created by user jucy_fish (train icon), Freepik (hourglass gif) and distributed by [Flaticon](https://www.flaticon.com).
