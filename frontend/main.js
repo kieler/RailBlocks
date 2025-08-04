@@ -24,7 +24,7 @@ Blockly.ContextMenuItems.registerCommentOptions()
 // Set the font a bit bolder and always to Arial.
 const theme = Blockly.Theme.defineTheme('theme', {
   fontStyle: {
-    family: 'Arial, Roboto, sans-serif',
+    family: 'Arial, sans-serif',
     weight: '700'
   },
   startHats: true
@@ -273,6 +273,7 @@ document.getElementById('file_load').addEventListener('change', (event) => {
   fr.readAsText(files[0])
 })
 
+// Toggle for visibility of loading/running-gif.
 let devDivVisible = false
 document.getElementById('button_options').addEventListener('click', () => {
   if (devDivVisible){

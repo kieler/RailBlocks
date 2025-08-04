@@ -211,6 +211,7 @@ generator.forBlock.ParallelStatementD = (block, gen) => {
   return NEXT_COMMAND ? COMMAND + '\n' + gen.blockToCode(NEXT_COMMAND) : COMMAND
 }
 
+// Dynamic conditional statement, goes through all inputs similarly like the dynamic parallel statement.
 generator.forBlock.ConditionalStatementD = (block, gen) => {
   // Open branch block.
   let COMMAND = 'Branch:\n'

@@ -10,6 +10,10 @@ import fs from 'fs'
 const app = express()
 const PORT = 5001
 
+/**
+ * Sends local logfiles as a response to the frontend.
+ * @param {Response} res -- the response send to the frontend.
+ */
 function sendLogs(res) {
   res.send(
       'COMPILER:\n' +
