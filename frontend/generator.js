@@ -217,7 +217,7 @@ generator.forBlock.ConditionalStatementD = (block, gen) => {
   let COMMAND = 'Branch:\n'
 
   // Append all input statements inside Start-End blocks.
-  for (let i = 0; i < block.inputCount+1; i++) {
+  for (let i = 0; i < block.inputCount + 1; i++) {
     const COND_BLOCK = gen.statementToCode(block, 'COND_BLOCK' + i)
     const CONTACT = ['first', 'second'][block.getFieldValue('CONTACT' + i)[4] - 1]
     const SEGMENT = segNameMap.get(block.getFieldValue('SEGMENT' + i))

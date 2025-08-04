@@ -228,7 +228,7 @@ document.getElementById('button_sim').addEventListener('click', () => {
   }
 })
 document.getElementById('button_run').addEventListener('click', () => {
-  if (!running && confirm("Really deploy on railway?")) {
+  if (!running && confirm("Really deploy on the railway?")) {
     sendSignalToBackend('button_run')
   }
 })
