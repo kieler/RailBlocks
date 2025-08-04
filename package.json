@@ -1,14 +1,14 @@
 {
   "name": "railblocks",
   "version": "1.0.0",
-  "description": "A Blockly RailSL implementation",
+  "description": "A Blockly RailSL implementation", 
+  "author": "Henri Heyden",
   "main": "main.js",
   "scripts": {
     "start": "concurrently \"npm:frontend\" \"npm:backend\"",
     "frontend": "vite ./frontend/",
     "backend": "cd backend && node backend.js"
   },
-  "author": "Henri Heyden",
   "type": "module",
   "dependencies": {
     "blockly": "^12.2.0",
