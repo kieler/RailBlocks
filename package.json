@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A Blockly RailSL implementation", 
   "author": "Henri Heyden",
+  "license": "MIT",
   "main": "main.js",
   "scripts": {
     "start": "concurrently \"npm:frontend\" \"npm:backend\"",

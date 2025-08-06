@@ -1,3 +1,21 @@
+/*
+ * RailBlocks - A Blockly RailSL Implementation
+ *
+ * https://github.com/kieler/RailBlocks
+ *
+ * Copyright 2025 by
+ *  + Henri Heyden and
+ *  + Kiel University
+ *    + Department of Computer Science
+ *      + Real-Time and Embedded Systems Group
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the MIT License which
+ * is available at https://opensource.org/license/MIT.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
 // BACKEND SERVER THAT LISTENS TO FRONTEND SERVER
 
 // Uses express to host an additional server that listens to port 5001 for requests.
