@@ -28,4 +28,4 @@ The VPL is designed to simplify the original RailSL grammar to make it usable by
 3. Start with `npm run start`.
 
 #### Attributions
-Icons and animations created by user jucy_fish (favicon.png), Freepik (hourglass.gif) and Flaticon (disk.svg, file-import.svg, settings.svg) and distributed by [Flaticon](https://www.flaticon.com). Other icons (train.svg, train-execute.svg) were created by Sören Domrös.
+Icons and animations created by user jucy_fish (favicon.png), Freepik (hourglass.gif) and Flaticon (disk.svg, file-import.svg, settings.svg) and distributed by [Flaticon](https://www.flaticon.com). Other icons (train.svg, train-execute.svg) were created by Sören Domrös under the [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/) license.
