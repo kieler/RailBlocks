@@ -1,21 +1,3 @@
-/*
- * RailBlocks - A Blockly RailSL Implementation
- *
- * https://github.com/kieler/RailBlocks
- *
- * Copyright 2025 by
- *  + Henri Heyden and
- *  + Kiel University
- *    + Department of Computer Science
- *      + Real-Time and Embedded Systems Group
- *
- * This program and the accompanying materials are made
- * available under the terms of the MIT License which
- * is available at https://opensource.org/license/MIT.
- *
- * SPDX-License-Identifier: MIT
- */
-
 import * as Blockly from 'blockly/core'
 import * as En from 'blockly/msg/en'
 
@@ -131,10 +113,10 @@ function markWarnings (workspace) {
   // Mark all Blocks following Branch/Parallel Blocks that have loops inside.
   workspace.getAllBlocks().forEach(block => {
     const cond = containsLoopBlock(block)
-    if (!block.warned && block.type === 'ParallelStatement' && cond) {
+    if (!block.warned && block.type === 'ParallelStatementD' && cond) {
       block.setWarningText('Blocks after will not be reached because of a loop inside this.')
       block.warned = true
-    } else if (!block.warned && block.type === 'ConditionalStatement' && cond) {
+    } else if (!block.warned && block.type === 'ConditionalStatementD' && cond) {
       block.setWarningText('Blocks after may not be reached because of a loop inside this.')
       block.warned = true
     } else if (block.warned && !cond) {
