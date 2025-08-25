@@ -1,21 +1,3 @@
-/*
- * RailBlocks - A Blockly RailSL Implementation
- *
- * https://github.com/kieler/RailBlocks
- *
- * Copyright 2025 by
- *  + Henri Heyden and
- *  + Kiel University
- *    + Department of Computer Science
- *      + Real-Time and Embedded Systems Group
- *
- * This program and the accompanying materials are made
- * available under the terms of the MIT License which
- * is available at https://opensource.org/license/MIT.
- *
- * SPDX-License-Identifier: MIT
- */
-
 import * as Blockly from 'blockly/core'
 import { segName, mutationToDom, domToMutation, validatorSegment } from './consts.js'
 import { FieldPlusMinus } from './fields.js'
@@ -401,12 +383,12 @@ Blockly.Blocks.LightStatement = {
     for (let i = 0; i < this.inputCount; i++) {
       if (i === 0) {
         valueInput.appendField(new Blockly.FieldNumber(
-          0, 0, 29
+          0, 0, 23
         ), 'NUMBER' + i)
       } else {
         valueInput.appendField(',')
           .appendField(new Blockly.FieldNumber(
-            0, 0, 29
+            0, 0, 23
           ), 'NUMBER' + i)
       }
       this.setFieldValue(values[i], 'NUMBER' + i)
