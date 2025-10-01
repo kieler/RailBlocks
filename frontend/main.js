@@ -132,10 +132,10 @@ function markWarnings (workspace) {
   workspace.getAllBlocks().forEach(block => {
     const cond = containsLoopBlock(block)
     if (!block.warned && block.type === 'ParallelStatementD' && cond) {
-      block.setWarningText('Blocks after will not be reached because of a loop inside this.')
+      block.setWarningText('Blocks after this will not be reached because of a loop inside this.')
       block.warned = true
     } else if (!block.warned && block.type === 'ConditionalStatementD' && cond) {
-      block.setWarningText('Blocks after may not be reached because of a loop inside this.')
+      block.setWarningText('Blocks after this may not be reached because of a loop inside this.')
       block.warned = true
     } else if (block.warned && !cond) {
       // Close previous warning if it exists.
