@@ -32,11 +32,16 @@ jobs:
         TODO: if the release download is a zip, unzip it first
       
       - name: Create bundle
-        run: |
-          mkdir bundle
-          cp -r * bundle/ || true
-          cd bundle
-          zip -r ../release-bundle.zip .
+	  run: |
+	    mkdir bundle
+	    rsync -a \
+	      --exclude bundle \
+	      --exclude .git \
+	      --exclude .github \
+	      --exclude release-bundle.zip \
+	      ./ bundle/
+	    cd bundle
+	    zip -r ../release-bundle.zip .
       - name: Upload zip to triggering release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
