@@ -24,14 +24,12 @@ jobs:
           OWNER: kieler
           REPO: railsl
         run: |
-          mkdir external
           assets=$(gh api repos/$OWNER/$REPO/releases/tags/$TAG --jq '.assets[].url')
           for url in $assets; do
             name=$(gh api $url -H "Accept: application/vnd.github+json" --jq '.name')
-            gh api $url -H "Accept: application/octet-stream" > "external/$name"
+            gh api $url -H "Accept: application/octet-stream" > "backend/executor/$name"
           done
-          
-      TODO: make sure files are at expected locations
+        TODO: if the release download is a zip, unzip it first
       
       - name: Create bundle
         run: |
