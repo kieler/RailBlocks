@@ -1,4 +1,4 @@
-name: release
+name: Build release bundle
 
 on:
   release:
@@ -7,11 +7,40 @@ jobs:
   bundle-release:
     name: "Bundle with KiCo jar and attach artifacts to release"
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/cache@v5
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/setup-node@v6
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Read external release tag
+        id: config
+        run: |
+          TAG=$(cat .railsl-release-tag | tr -d '\n')
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+      - name: Download artifacts from external release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: kieler
+          REPO: railsl
+        run: |
+          mkdir external
+          assets=$(gh api repos/$OWNER/$REPO/releases/tags/$TAG --jq '.assets[].url')
+          for url in $assets; do
+            name=$(gh api $url -H "Accept: application/vnd.github+json" --jq '.name')
+            gh api $url -H "Accept: application/octet-stream" > "external/$name"
+          done
+          
+      TODO: make sure files are at expected locations
+      
+      - name: Create bundle
+        run: |
+          mkdir bundle
+          cp -r * bundle/ || true
+          cd bundle
+          zip -r ../release-bundle.zip .
+      - name: Upload zip to triggering release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" release-bundle.zip --clobber
