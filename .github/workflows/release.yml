@@ -18,30 +18,34 @@ jobs:
         run: |
           TAG=$(cat .railsl-release-tag | tr -d '\n')
           echo "TAG=$TAG" >> "$GITHUB_ENV"
-      - name: Download artifacts from external release
+      - name: Download specific artifact from external release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OWNER: kieler
           REPO: railsl
+          ASSET_NAME: kico-railsl.jar 
         run: |
-          assets=$(gh api repos/$OWNER/$REPO/releases/tags/$TAG --jq '.assets[].url')
-          for url in $assets; do
-            name=$(gh api $url -H "Accept: application/vnd.github+json" --jq '.name')
-            gh api $url -H "Accept: application/octet-stream" > "backend/executor/$name"
-          done
-        TODO: if the release download is a zip, unzip it first
-      
+          url=$(gh api repos/$OWNER/$REPO/releases/tags/$TAG \
+            --jq ".assets[] | select(.name == \"$ASSET_NAME\") | .url")
+
+          if [ -z "$url" ]; then
+            echo "Asset not found: $ASSET_NAME"
+            exit 1
+          fi
+
+          mkdir -p backend/executor
+          gh api "$url" -H "Accept: application/octet-stream" > "backend/executor/$ASSET_NAME"
       - name: Create bundle
-	  run: |
-	    mkdir bundle
-	    rsync -a \
-	      --exclude bundle \
-	      --exclude .git \
-	      --exclude .github \
-	      --exclude release-bundle.zip \
-	      ./ bundle/
-	    cd bundle
-	    zip -r ../release-bundle.zip .
+        run: |
+          mkdir bundle
+          rsync -a \
+            --exclude bundle \
+            --exclude .git \
+            --exclude .github \
+            --exclude release-bundle.zip \
+            ./ bundle/
+          cd bundle
+          zip -r ../release-bundle.zip .
       - name: Upload zip to triggering release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
