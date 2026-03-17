@@ -27,7 +27,7 @@ rm -rf kieler-gen RailController.exe compiler.log controller.log
 touch compiler.log controller.log
 
 # Compile code
-java -jar kico-railsls.jar -s de.cau.cs.kieler.railsl.netlist.deploy ./saved.railsl > compiler.log
+java -jar kico-railsl.jar -s de.cau.cs.kieler.railsl.netlist.deploy ./saved.railsl > compiler.log
 
 # Deploy
 ./RailController.exe > controller.log

@@ -16,7 +16,7 @@ The VPL is designed to simplify the original RailSL grammar to make it usable by
 - Linux-based operating system, tested on Arch Linux and Ubuntu 24.04 LTS
 - Node.js, tested versions: `24.1.0`, `22.16.0`
     - https://nodejs.org/en
-- KIELER Compiler CLI (kico) binary with modern RailSL grammar support
+- KIELER Compiler CLI (kico) jar with modern RailSL grammar support
     - Place inside [backend/executor](backend/executor)
     - Has known bug that prevents deploy if path to binary contains whitespaces
     - [https://rtsys.informatik.uni-kiel.de/~kieler/files/blockly-compiler/](https://rtsys.informatik.uni-kiel.de/~kieler/files/blockly-compiler/)
