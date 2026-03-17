@@ -1,0 +1,53 @@
+name: Build release bundle
+
+on:
+  release:
+    types: [published]
+jobs:
+  bundle-release:
+    name: "Bundle with KiCo jar and attach artifacts to release"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Read external release tag
+        id: config
+        run: |
+          TAG=$(cat .railsl-release-tag | tr -d '\n')
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+      - name: Download specific artifact from external release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: kieler
+          REPO: railsl
+          ASSET_NAME: kico-railsl.jar 
+        run: |
+          url=$(gh api repos/$OWNER/$REPO/releases/tags/$TAG \
+            --jq ".assets[] | select(.name == \"$ASSET_NAME\") | .url")
+
+          if [ -z "$url" ]; then
+            echo "Asset not found: $ASSET_NAME"
+            exit 1
+          fi
+
+          mkdir -p backend/executor
+          gh api "$url" -H "Accept: application/octet-stream" > "backend/executor/$ASSET_NAME"
+      - name: Create bundle
+        run: |
+          mkdir bundle
+          rsync -a \
+            --exclude bundle \
+            --exclude .git \
+            --exclude .github \
+            --exclude release-bundle.zip \
+            ./ bundle/
+          cd bundle
+          zip -r ../release-bundle.zip .
+      - name: Upload zip to triggering release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" release-bundle.zip --clobber

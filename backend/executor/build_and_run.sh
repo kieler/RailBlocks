@@ -27,7 +27,7 @@ rm -rf kieler-gen RailController compiler.log controller.log
 touch compiler.log controller.log
 
 # Compile code
-./kico-linux -s de.cau.cs.kieler.railsl.netlist.sim.scade ./saved.railsl > compiler.log
+java -jar kico-railsls.jar -s de.cau.cs.kieler.railsl.netlist.sim.scade ./saved.railsl > compiler.log
 
 # Start controller in background
 sh -c "cd ./kieler-gen/simulation/Executables/ && stdbuf -o0 ./RailController > ../../../controller.log" &
