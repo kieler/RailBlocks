@@ -75,3 +75,75 @@ body {
 #file_load {
     display: none;
 }
+
+.top_control_button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.language-switcher {
+    display: inline-block;
+    vertical-align: top;
+    pointer-events: auto;
+}
+
+.language_menu_panel {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    right: 0;
+    margin-top: 0;
+    min-width: 10rem;
+    max-width: min(16rem, 90vw);
+    text-align: left;
+    background: white;
+    border: 1px solid lightgray;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    z-index: 20;
+    pointer-events: auto;
+}
+
+.language_menu_label {
+    display: block;
+    font-size: 12pt;
+    margin-bottom: 0.35rem;
+}
+
+.language_option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.35rem;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    background: white;
+    padding: 0.2rem 0.35rem;
+    margin-bottom: 0.25rem;
+    font-size: 12pt;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.language_option:hover {
+    background: #f1f1f1;
+}
+
+.language_option_marker {
+    width: 1ch;
+    visibility: hidden;
+}
+
+.language_option.active {
+    border-color: #888;
+    background: #efefef;
+}
+
+.language_option.active .language_option_marker {
+    visibility: visible;
+}

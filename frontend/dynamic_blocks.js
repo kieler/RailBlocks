@@ -29,14 +29,14 @@ Blockly.Blocks.ParallelStatementD = {
     // Append a named input which contains the +/- buttons and the text.
     this.appendDummyInput('PARALLEL_ROOT')
       .appendField(new FieldPlusMinus(), 'PM_FIELD')
-      .appendField('Parallel')
+      .appendField(Blockly.Msg.RAILBLOCKS_PARALLEL_TEXT)
 
     // Only allow this block to follow statements and only allow statements to be appended to this.
     this.setPreviousStatement('CStatement')
     this.setNextStatement('CStatement')
 
     this.setColour(190)
-    this.setTooltip('Execute multiple blocks at the same time.')
+    this.setTooltip(Blockly.Msg.RAILBLOCKS_PARALLEL_TOOLTIP)
 
     // We need at least two inputs, so we cheat in one that will always be there.
     this.appendStatementInput('PARA_BLOCK0')
@@ -87,11 +87,11 @@ Blockly.Blocks.ParallelStatementD = {
 // Remember to clean up inputs, when deleting.
 function buildAnotherCondRow(index, block){
   block.appendDummyInput(`COND_BLOCK${index}_TEXT`)
-      .appendField('If')
-      .appendField(new Blockly.FieldDropdown([['first', 'ITEM1'], ['second', 'ITEM2']]), `CONTACT${index}`)
-      .appendField('contact of')
+      .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TEXT_START)
+      .appendField(new Blockly.FieldDropdown([[Blockly.Msg.RAILBLOCKS_CONDITIONAL_FIRST, 'ITEM1'], [Blockly.Msg.RAILBLOCKS_CONDITIONAL_SECOND, 'ITEM2']]), `CONTACT${index}`)
+      .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TEXT_MIDDLE)
       .appendField(new Blockly.FieldDropdown(segName), `SEGMENT${index}`)
-      .appendField('is reached first')
+      .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TEXT_END)
   block.appendStatementInput(`COND_BLOCK${index}`)
 }
 
@@ -101,14 +101,14 @@ Blockly.Blocks.ConditionalStatementD = {
     // Append a named input which contains the +/- buttons and the text.
     this.appendDummyInput('BRANCH_ROOT')
         .appendField(new FieldPlusMinus(), 'PM_FIELD')
-        .appendField('Branch')
+        .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TITEL_TEXT)
 
     // Only allow this block to follow statements and only allow statements to be appended to this.
     this.setPreviousStatement('CStatement')
     this.setNextStatement('CStatement')
 
     this.setColour(300)
-    this.setTooltip('Execute different blocks depending on which track is reached first by a train.')
+    this.setTooltip(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TOOLTIP)
 
     // We need at least two inputs, so we cheat in one that will always be there.
     buildAnotherCondRow(0, this)
@@ -163,14 +163,13 @@ Blockly.Blocks.TrackStatement = {
     this.appendValueInput('SET_TRACK')
       .appendField(new FieldPlusMinus(), 'PM_FIELD')
       .setCheck('CSetVector')
-      .appendField('Set track', 'SET_TRACK_FIELD')
+      .appendField(Blockly.Msg.RAILBLOCKS_TRACK_TEXT_START, 'SET_TRACK_FIELD')
 
     this.setPreviousStatement('CStatement')
     this.setNextStatement('CStatement')
 
     this.setColour(25)
-    this.setTooltip('Sets a number of tracks to some velocity and direction.\n' +
-            'Right-click and select Add/Remove Input to control the number of tracks.')
+    this.setTooltip(Blockly.Msg.RAILBLOCKS_TRACK_TOOLTIP)
 
     this.inputCount = 1
     this.updateShape()
@@ -225,7 +224,7 @@ Blockly.Blocks.TrackStatement = {
     }
 
     // Append the last text.
-    valueInput.appendField('to')
+    valueInput.appendField(Blockly.Msg.RAILBLOCKS_TRACK_TEXT_END)
 
     // Now the block looks like this:
     // ValueInput["Set track" [Comma seperated dropdown fields] "to: "] -<
@@ -238,13 +237,12 @@ Blockly.Blocks.TrackStatementALT = {
     this.appendValueInput('SET_TRACK')
       .appendField(new FieldPlusMinus(), 'PM_FIELD')
       .setCheck('CSetVector')
-      .appendField('Set track', 'SET_TRACK_FIELD')
+      .appendField(Blockly.Msg.RAILBLOCKS_TRACK_TEXT_START, 'SET_TRACK_FIELD')
     this.setPreviousStatement('CStatement')
     this.setNextStatement('CStatement')
     this.setInputsInline(false)
     this.setColour(25)
-    this.setTooltip('Sets a number of tracks to some velocity and direction.\n' +
-            'Right-click and select Add/Remove Input to control the number of tracks.')
+    this.setTooltip(Blockly.Msg.RAILBLOCKS_TRACK_TOOLTIP)
 
     this.inputCount = 1
     this.updateShape()
@@ -289,7 +287,7 @@ Blockly.Blocks.TrackStatementALT = {
       this.setFieldValue(values[i], 'TEXT' + i)
     }
 
-    valueInput.appendField('to')
+    valueInput.appendField(Blockly.Msg.RAILBLOCKS_TRACK_TEXT_END)
   }
 }
 
@@ -297,12 +295,11 @@ Blockly.Blocks.PointStatement = {
   init: function () {
     this.appendDummyInput('SET_POINT')
       .appendField(new FieldPlusMinus(), 'PM_FIELD')
-      .appendField('Set point', 'SET_POINT_FIELD')
+      .appendField(Blockly.Msg.RAILBLOCKS_POINT_TEXT_START, 'SET_POINT_FIELD')
     this.setPreviousStatement('CStatement')
     this.setNextStatement('CStatement')
     this.setColour(0)
-    this.setTooltip('Sets a number of points to either branch or be straight.\n' +
-            'Right-click and select Add/Remove Input to control the number of points.')
+    this.setTooltip(Blockly.Msg.RAILBLOCKS_POINT_TOOLTIP)
 
     this.inputCount = 1
     this.updateShape()
@@ -348,11 +345,11 @@ Blockly.Blocks.PointStatement = {
     }
 
     // Append the last portion of this block.
-    dummyInput.appendField('to')
+    dummyInput.appendField(Blockly.Msg.RAILBLOCKS_POINT_TEXT_END)
       .appendField(new Blockly.FieldDropdown(
         [
-          ['straight', 'ITEM1'],
-          ['branch', 'ITEM2']
+          [Blockly.Msg.RAILBLOCKS_POINT_STRAIGHT, 'ITEM1'],
+          [Blockly.Msg.RAILBLOCKS_POINT_BRANCH, 'ITEM2']
         ]
       ), 'BRANCH_OPTION')
   }
@@ -362,12 +359,11 @@ Blockly.Blocks.LightStatement = {
   init: function () {
     this.appendDummyInput('SET_LIGHT')
       .appendField(new FieldPlusMinus(), 'PM_FIELD')
-      .appendField('Set light', 'SET_LIGHT_FIELD')
+      .appendField(Blockly.Msg.RAILBLOCKS_LIGHTS_TEXT_START, 'SET_LIGHT_FIELD')
     this.setPreviousStatement('CStatement')
     this.setNextStatement('CStatement')
     this.setColour(60)
-    this.setTooltip('Sets a number of lamps to either on or off.\n' +
-            'Right-click and select Add/Remove Input to control the number of lamps.')
+    this.setTooltip(Blockly.Msg.RAILBLOCKS_LIGHTS_TOOLTIP)
 
     this.inputCount = 1
     this.updateShape()
@@ -412,11 +408,11 @@ Blockly.Blocks.LightStatement = {
       this.setFieldValue(values[i], 'NUMBER' + i)
     }
 
-    valueInput.appendField('to')
+    valueInput.appendField(Blockly.Msg.RAILBLOCKS_LIGHTS_TEXT_END)
       .appendField(new Blockly.FieldDropdown(
         [
-          ['on', 'ITEM1'],
-          ['off', 'ITEM2']
+          [Blockly.Msg.RAILBLOCKS_LIGHTS_ON, 'ITEM1'],
+          [Blockly.Msg.RAILBLOCKS_LIGHTS_OFF, 'ITEM2']
         ]
       ), 'LIGHT_STATUS')
   }

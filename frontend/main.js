@@ -17,17 +17,19 @@
 */
 
 import * as Blockly from 'blockly/core'
-import * as En from 'blockly/msg/en'
 
-import { blockDefinitionsJson, toolbox } from './blocks.js'
 import './renderer.js'
 import './dynamic_blocks.js'
+import { blockDefinitionsJson, createToolbox } from './blocks.js'
 import { compile } from './generator.js'
+import { getLabel, getToolBoxLabels, getHtmlLabels, getStoredLanguage, applyLanguage, LANGUAGE_STORAGE_KEY } from './localization.js'
 
 // MAIN PROGRAM
+const workspaceStorageKey = 'railblocks.workspace'
 
-// Important for block descriptions!
-Blockly.setLocale(En)
+// Apply the stored language 
+const currentLanguage = getStoredLanguage()
+applyLanguage(currentLanguage)
 
 // Set block definitions from blocks.js
 const blockDefinitions = Blockly.common.createBlockDefinitionsFromJsonArray(blockDefinitionsJson)
@@ -48,9 +50,33 @@ const theme = Blockly.Theme.defineTheme('theme', {
   startHats: true
 })
 
+/** 
+ * Helper function to apply the localized HTML labels to the page.
+ * @param {String} languageId The id of the language to apply.
+*/
+function applyHtmlLabels (languageId) {
+  const labels = getHtmlLabels(languageId)
+
+  document.title = labels.title
+  document.getElementById('button_sim').title = labels.simulationTitle
+  document.getElementById('button_run').title = labels.deployTitle
+  document.getElementById('button_options').title = labels.optionsTitle
+  document.getElementById('button_language').textContent = languageId.toUpperCase()
+  document.getElementById('button_language').title = labels.languageButton
+  document.getElementById('editorLanguage').textContent = labels.languageMenuLabel
+  document.getElementById('language_de_label').textContent = getLabel('de')
+  document.getElementById('language_en_label').textContent = getLabel('en')
+  document.getElementById('button_save').title = labels.saveTitle
+  document.getElementById('fileLoadLabel').title = labels.loadTitle
+  document.getElementById("generatedCodeTitle").textContent = labels.generatedCodeTitle
+  document.getElementById("logsTitel").textContent = labels.logsTitle
+  document.getElementById("attributionsTitle").textContent = labels.attributionsTitle
+  document.getElementById('attributions_text').innerHTML = labels.attributionsText
+}
+
 // Pass the defined toolbox to the div in index.html.
 const workspace = Blockly.inject('blocklyDiv', {
-  toolbox,
+  toolbox: createToolbox(getToolBoxLabels(currentLanguage)),
   theme,
   // Load the custom renderer defined in renderer.js
   // Should not make a big difference but is advised to be loaded for extensions.
@@ -65,15 +91,54 @@ const workspace = Blockly.inject('blocklyDiv', {
   }
 })
 
-// Add one program block.
-const program = workspace.newBlock('Program', 'ROOT')
-program.initSvg()
-program.render()
-program.setDeletable(false)
-program.setMovable(false)
-program.setEditable(false)
-// Add some padding to border
-program.moveBy(10, 10)
+/**
+ * Restores the workspace state from localStorage if available.
+ * @param {Blockly.WorkspaceSvg} workspace The workspace to restore.
+ * @returns {boolean} True if the workspace state was successfully restored, false otherwise.
+ */
+function restoreWorkspaceState (workspace) {
+  const savedWorkspace = window.localStorage.getItem(workspaceStorageKey)
+  if (!savedWorkspace) {
+    return false
+  }
+
+  try {
+    const state = JSON.parse(savedWorkspace)
+    Blockly.serialization.workspaces.load(state, workspace)
+    window.localStorage.removeItem(workspaceStorageKey)
+    return true
+  } catch (error) {
+    window.localStorage.removeItem(workspaceStorageKey)
+    console.error('Error occurred while restoring workspace state:', error)
+    return false
+  }
+}
+
+/**
+ * Saves the current workspace state to localStorage for later restoration.
+ * @param {Blockly.WorkspaceSvg} workspace The workspace to save.
+ */
+function saveWorkspaceState (workspace) {
+  const state = Blockly.serialization.workspaces.save(workspace)
+  window.localStorage.setItem(workspaceStorageKey, JSON.stringify(state))
+}
+
+const restoredWorkspace = restoreWorkspaceState(workspace)
+
+// If there was no workspace to restore, add a default program block.
+if (!restoredWorkspace) {
+  // Add one program block.
+  const program = workspace.newBlock('Program', 'ROOT')
+  program.initSvg()
+  program.render()
+  program.setDeletable(false)
+  program.setMovable(false)
+  program.setEditable(false)
+  // Add some padding to border
+  program.moveBy(10, 10)
+}
+
+compile(workspace)
 
 /**
  * Warns the user by indicating all blocks that are not inside the program block.
@@ -84,7 +149,7 @@ function markUnusedBlocks (workspace) {
   workspace.getAllBlocks().forEach(block => {
     // getRootBlock() returns the topmost block in a stack.
     if (!block.unused && block.getRootBlock().id !== 'ROOT') {
-      block.setWarningText('Unused block')
+      block.setWarningText(Blockly.Msg.RAILBLOCKS_WARNING_UNUSED)
       block.unused = true
     } else if (block.unused && block.getRootBlock().id === 'ROOT') {
       block.setWarningText(null)
@@ -132,10 +197,10 @@ function markWarnings (workspace) {
   workspace.getAllBlocks().forEach(block => {
     const cond = containsLoopBlock(block)
     if (!block.warned && block.type === 'ParallelStatementD' && cond) {
-      block.setWarningText('Blocks after this will not be reached because of a loop inside this.')
+      block.setWarningText(Blockly.Msg.RAILBLOCKS_WARNING_UNREACHABLE)
       block.warned = true
     } else if (!block.warned && block.type === 'ConditionalStatementD' && cond) {
-      block.setWarningText('Blocks after this may not be reached because of a loop inside this.')
+      block.setWarningText(Blockly.Msg.RAILBLOCKS_WARNING_UNREACHABLE)
       block.warned = true
     } else if (block.warned && !cond) {
       // Close previous warning if it exists.
@@ -164,7 +229,7 @@ function markUnconnectedBlocks (workspace) {
 
     // Set the warnings if appropriate.
     if (cond && !block.unused) {
-      block.setWarningText('This block has empty inputs and will cause a syntax error!')
+      block.setWarningText(Blockly.Msg.RAILBLOCKS_WARNING_EMPTY_INPUT)
       block.unconnected = true
     } else if (!cond && block.unconnected) {
       block.setWarningText(null)
@@ -246,7 +311,7 @@ document.getElementById('button_sim').addEventListener('click', () => {
   }
 })
 document.getElementById('button_run').addEventListener('click', () => {
-  if (!running && confirm("Really deploy on the railway?")) {
+  if (!running && confirm(getHtmlLabels(currentLanguage).deployConfirm)) {
     sendSignalToBackend('button_run')
   }
 })
@@ -273,6 +338,78 @@ document.getElementById('button_save').addEventListener('click', () => {
   a.click()
   // Clean up.
   URL.revokeObjectURL(url)
+})
+
+// language menu elements
+const languageMenu = document.getElementById('language_menu')
+const languageButton = document.getElementById('button_language')
+const simulationButton = document.getElementById('button_sim')
+const languageOptions = Array.from(document.querySelectorAll('.language_option'))
+
+/**
+ * Helper function to synchronize the size of the language button with the simulation button.
+ */
+function syncLanguageButtonSize () {
+  const buttonWidth = simulationButton.offsetWidth
+  const buttonHeight = simulationButton.offsetHeight
+
+  languageButton.style.width = buttonWidth + 'px'
+  languageButton.style.height = buttonHeight + 'px'
+}
+
+/**
+ * Updates the language menu selection based on the selected language.
+ * @param {String} selectedLanguage The id of the language to select.
+ */
+function updateLanguageMenuSelection (selectedLanguage) {
+  languageButton.textContent = selectedLanguage.toUpperCase()
+
+  languageOptions.forEach(option => {
+    const marker = option.querySelector('.language_option_marker')
+    if (option.dataset.language === selectedLanguage) {
+      option.classList.add('active')
+      option.setAttribute('aria-pressed', 'true')
+      marker.textContent = '>'
+    } else {
+      option.classList.remove('active')
+      option.setAttribute('aria-pressed', 'false')
+      marker.textContent = ''
+    }
+  })
+}
+
+applyHtmlLabels(currentLanguage)
+updateLanguageMenuSelection(currentLanguage)
+
+syncLanguageButtonSize()
+window.addEventListener('load', syncLanguageButtonSize)
+window.addEventListener('resize', syncLanguageButtonSize)
+
+// Toggle for language menu visibility and listeners for the language options.
+languageButton.addEventListener('click', () => {
+  languageMenu.style.display = languageMenu.style.display === 'none' ? 'block' : 'none'
+})
+
+// Add listeners to the language options that save the workspace, set the new language and reload the page.
+languageOptions.forEach(option => {
+  option.addEventListener('click', () => {
+    const selectedLanguage = option.dataset.language
+    if (selectedLanguage === currentLanguage) {
+      languageMenu.style.display = 'none'
+      return
+    }
+
+    saveWorkspaceState(workspace)
+    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, selectedLanguage)
+    window.location.reload()
+  })
+})
+
+// Add a listener to the document that closes the language menu when clicking outside of it.
+document.addEventListener('click', (event) => {
+  if (!languageMenu.contains(event.target) && !languageButton.contains(event.target)) {
+    languageMenu.style.display = 'none'
+  }
 })
 
 // Add another listener for the load file, which imports a local json file through the browser

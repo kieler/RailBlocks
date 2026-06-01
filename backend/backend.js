@@ -21,7 +21,7 @@
 // Uses express to host an additional server that listens to port 5001 for requests.
 import express from 'express'
 import bodyParser from 'express'
-import { exec } from 'child_process'
+import { spawn } from 'child_process'
 import fs from 'fs'
 
 // Start the express-based server.
