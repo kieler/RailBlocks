@@ -140,6 +140,60 @@ if (!restoredWorkspace) {
 
 compile(workspace)
 
+// Tracks all active warnings per block so multiple warning sources can coexist.
+const activeBlockWarnings = new Map()
+
+/**
+ * Updates the visible warning text of a block from the warning map.
+ * If no warnings remain, the warning text is cleared.
+ * @param {Blockly.Block} block Block whose warning text should be updated.
+ */
+function syncBlockWarningText (block) {
+  const warningsByType = activeBlockWarnings.get(block.id)
+
+  if (!warningsByType || warningsByType.size === 0) {
+    block.setWarningText(null)
+    activeBlockWarnings.delete(block.id)
+    return
+  }
+
+  block.setWarningText("- " + Array.from(warningsByType.values()).join('\n- '))
+}
+
+/**
+ * Adds or updates a warning for a block.
+ * @param {Blockly.Block} block Block to warn.
+ * @param {String} warningKey Unique key for the warning source.
+ * @param {String} warningText Warning text to display.
+ */
+function addBlockWarning (block, warningKey, warningText) {
+  let warningsByType = activeBlockWarnings.get(block.id)
+
+  if (!warningsByType) {
+    warningsByType = new Map()
+    activeBlockWarnings.set(block.id, warningsByType)
+  }
+
+  warningsByType.set(warningKey, warningText)
+  syncBlockWarningText(block)
+}
+
+/**
+ * Removes a warning from a block.
+ * @param {Blockly.Block} block Block to update.
+ * @param {String} warningKey Unique key for the warning source.
+ */
+function removeBlockWarning (block, warningKey) {
+  const warningsByType = activeBlockWarnings.get(block.id)
+
+  if (!warningsByType) {
+    return
+  }
+
+  warningsByType.delete(warningKey)
+  syncBlockWarningText(block)
+}
+
 /**
  * Warns the user by indicating all blocks that are not inside the program block.
  * @param {Blockly.WorkspaceSvg} workspace The workspace to scan.
@@ -149,10 +203,10 @@ function markUnusedBlocks (workspace) {
   workspace.getAllBlocks().forEach(block => {
     // getRootBlock() returns the topmost block in a stack.
     if (!block.unused && block.getRootBlock().id !== 'ROOT') {
-      block.setWarningText(Blockly.Msg.RAILBLOCKS_WARNING_UNUSED)
+      addBlockWarning(block, 'unused', Blockly.Msg.RAILBLOCKS_WARNING_UNUSED)
       block.unused = true
     } else if (block.unused && block.getRootBlock().id === 'ROOT') {
-      block.setWarningText(null)
+      removeBlockWarning(block, 'unused')
       block.unused = false
       // (remind the loop-warner, that the warning text has been cleared)
       block.warned = false
@@ -197,14 +251,14 @@ function markWarnings (workspace) {
   workspace.getAllBlocks().forEach(block => {
     const cond = containsLoopBlock(block)
     if (!block.warned && block.type === 'ParallelStatementD' && cond) {
-      block.setWarningText(Blockly.Msg.RAILBLOCKS_WARNING_UNREACHABLE)
+      addBlockWarning(block, 'unreachable', Blockly.Msg.RAILBLOCKS_WARNING_UNREACHABLE)
       block.warned = true
     } else if (!block.warned && block.type === 'ConditionalStatementD' && cond) {
-      block.setWarningText(Blockly.Msg.RAILBLOCKS_WARNING_UNREACHABLE)
+      addBlockWarning(block, 'unreachable', Blockly.Msg.RAILBLOCKS_WARNING_UNREACHABLE)
       block.warned = true
     } else if (block.warned && !cond) {
       // Close previous warning if it exists.
-      block.setWarningText(null)
+      removeBlockWarning(block, 'unreachable')
       block.warned = false
       // (remind the unused-warner that the warning has been cleared)
       block.unused = false
@@ -228,11 +282,11 @@ function markUnconnectedBlocks (workspace) {
     }
 
     // Set the warnings if appropriate.
-    if (cond && !block.unused) {
-      block.setWarningText(Blockly.Msg.RAILBLOCKS_WARNING_EMPTY_INPUT)
+    if (cond) {
+      addBlockWarning(block, 'empty_input', Blockly.Msg.RAILBLOCKS_WARNING_EMPTY_INPUT)
       block.unconnected = true
     } else if (!cond && block.unconnected) {
-      block.setWarningText(null)
+      removeBlockWarning(block, 'empty_input')
       block.unconnected = false
     }
   })
