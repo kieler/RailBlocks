@@ -44,7 +44,7 @@ const LANGUAGE_CONFIGS = {
       saveTitle: 'Aktuellen Arbeitsbereich auf der Festplatte speichern',
       loadTitle: 'Arbeitsbereich von der Festplatte laden',
       attributionsTitle: 'Danksagungen',
-      attributionsText: 'Bilder erstellt und verteilt von user jucy_fish (Zugsymbol), Freepik (Sanduhr-GIF) und <a href="https://www.flaticon.com/" title="icons source">Flaticon.</a>'
+      attributionsText: 'Bilder erstellt und verteilt von user jucy_fish (Zugsymbol), Freepik (Sanduhr-GIF), <a href="https://www.flaticon.com/" title="icons source 1">Flaticon</a> und <a href="https://www.svgrepo.com" title="icons source 2">svgrepo</a>.'
     },
     toolboxLabels: {
       setStatements: 'Setzanweisungen',
@@ -69,7 +69,7 @@ const LANGUAGE_CONFIGS = {
       saveTitle: 'Save current workspace to disk',
       loadTitle: 'Load workspace from disk',
       attributionsTitle: 'Attributions',
-      attributionsText: 'Images created and distributed by user jucy_fish (train icon), Freepik (hourglass gif) and <a href="https://www.flaticon.com/" title="icons source">Flaticon.</a>'
+      attributionsText: 'Images created and distributed by user jucy_fish (train icon), Freepik (hourglass gif), <a href="https://www.flaticon.com/" title="icons source 1">Flaticon</a> and <a href="https://www.svgrepo.com" title="icons source 2">svgrepo</a>.'
     },
     toolboxLabels: {
       setStatements: 'Set Statements',

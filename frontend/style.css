@@ -80,9 +80,21 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
+    padding: 0.2rem 0.35rem;
     text-align: center;
     box-sizing: border-box;
+}
+
+button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem 0.35rem;
+}
+
+button > img,
+.file-label > img {
+    display: block;
 }
 
 .language-switcher {

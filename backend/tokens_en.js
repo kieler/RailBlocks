@@ -58,7 +58,7 @@ export const RailBlocksEnTable = {
 
   RAILBLOCKS_LIGHTS_TEXT_START: 'Set light',
   RAILBLOCKS_LIGHTS_TEXT_END: 'to',
-  RAILBLOCKS_LIGHTS_TOOLTIP: 'Sets a number of lamps to either on or off.\n' + 'Right-click and select Add/Remove Input to control the number of lamps.',
+  RAILBLOCKS_LIGHTS_TOOLTIP: 'Sets a number of lamps to either on or off.\n' + 'Click the plus/minus symbol to control the number of lamps.',
   RAILBLOCKS_LIGHTS_ON: 'on',
   RAILBLOCKS_LIGHTS_OFF: 'off',
 
@@ -72,11 +72,11 @@ export const RailBlocksEnTable = {
 
   RAILBLOCKS_TRACK_TEXT_START: 'Set track',
   RAILBLOCKS_TRACK_TEXT_END: 'to',
-  RAILBLOCKS_TRACK_TOOLTIP: 'Sets a number of tracks to some velocity and direction.\n' + 'Right-click and select Add/Remove Input to control the number of tracks.',
+  RAILBLOCKS_TRACK_TOOLTIP: 'Sets a number of tracks to some velocity and direction.\n' + 'Click the plus/minus symbol to control the number of tracks.',
 
   RAILBLOCKS_POINT_TEXT_START: 'Set point',
   RAILBLOCKS_POINT_TEXT_END: 'to',
-  RAILBLOCKS_POINT_TOOLTIP: 'Sets a number of points to either branch or be straight.\n' + 'Right-click and select Add/Remove Input to control the number of points.',
+  RAILBLOCKS_POINT_TOOLTIP: 'Sets a number of points to either branch or be straight.\n' + 'Click the plus/minus symbol to control the number of points.',
   RAILBLOCKS_POINT_STRAIGHT: 'straight',
   RAILBLOCKS_POINT_BRANCH: 'branch',
 

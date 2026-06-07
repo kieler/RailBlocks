@@ -39,7 +39,7 @@ SPDX-License-Identifier: MIT
 
         <div class="language-switcher">
             <button id="button_language" class="top_control_button" style="font-family: arial, sans-serif; font-size: 14pt" title="Choose editor language">
-                DE
+                <img src="icons/language.svg" style="width:19px;height:19px" alt="Choose language">
             </button>
             <div id="language_menu" style="display: none;" class="language_menu_panel">
                 <span id="editorLanguage" class="language_menu_label">Editor language</span>
@@ -68,10 +68,10 @@ SPDX-License-Identifier: MIT
     <!-- Dev-Div -->
     <div id="devDiv" style="position: absolute; bottom: 1dvh; right: 2.5dvw; padding:5px; background: white; border: 2px solid lightgray; overflow: scroll; width: 20dvw; height: 85dvh; z-index: -1">
         <!-- Buttons to save and load a workspace -->
-        <button id="button_save" style="font-family: arial, sans-serif; font-size: 14pt" title="Save current workspace to disk">
+        <button id="button_save" class="file-label top_control_button" style="font-family: arial, sans-serif; font-size: 14pt" title="Save current workspace to disk">
             <img src="icons/disk.svg" style="width:19px;height:19px" alt="Save current workspace to disk">
         </button>
-        <label for="file_load" class="file-label" style="font-family: arial, sans-serif; font-size: 14pt; display: inline-block" title="Load workspace from disk">
+        <label for="file_load" class="file-label top_control_button" style="font-family: arial, sans-serif; font-size: 14pt" title="Load workspace from disk">
             <img src="icons/file-import.svg" style="width:19px;height:19px" alt="Load workspace from disk" id="fileLoadLabel">
         </label>
         <input type="file" id="file_load" accept="application/json"/>

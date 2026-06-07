@@ -61,7 +61,6 @@ function applyHtmlLabels (languageId) {
   document.getElementById('button_sim').title = labels.simulationTitle
   document.getElementById('button_run').title = labels.deployTitle
   document.getElementById('button_options').title = labels.optionsTitle
-  document.getElementById('button_language').textContent = languageId.toUpperCase()
   document.getElementById('button_language').title = labels.languageButton
   document.getElementById('editorLanguage').textContent = labels.languageMenuLabel
   document.getElementById('language_de_label').textContent = getLabel('de')
@@ -401,23 +400,10 @@ const simulationButton = document.getElementById('button_sim')
 const languageOptions = Array.from(document.querySelectorAll('.language_option'))
 
 /**
- * Helper function to synchronize the size of the language button with the simulation button.
- */
-function syncLanguageButtonSize () {
-  const buttonWidth = simulationButton.offsetWidth
-  const buttonHeight = simulationButton.offsetHeight
-
-  languageButton.style.width = buttonWidth + 'px'
-  languageButton.style.height = buttonHeight + 'px'
-}
-
-/**
  * Updates the language menu selection based on the selected language.
  * @param {String} selectedLanguage The id of the language to select.
  */
 function updateLanguageMenuSelection (selectedLanguage) {
-  languageButton.textContent = selectedLanguage.toUpperCase()
-
   languageOptions.forEach(option => {
     const marker = option.querySelector('.language_option_marker')
     if (option.dataset.language === selectedLanguage) {
@@ -434,10 +420,6 @@ function updateLanguageMenuSelection (selectedLanguage) {
 
 applyHtmlLabels(currentLanguage)
 updateLanguageMenuSelection(currentLanguage)
-
-syncLanguageButtonSize()
-window.addEventListener('load', syncLanguageButtonSize)
-window.addEventListener('resize', syncLanguageButtonSize)
 
 // Toggle for language menu visibility and listeners for the language options.
 languageButton.addEventListener('click', () => {
@@ -484,12 +466,23 @@ document.getElementById('file_load').addEventListener('change', (event) => {
 
 // Toggle for visibility of loading/running-gif.
 let devDivVisible = false
-document.getElementById('button_options').addEventListener('click', () => {
+const settingsMenu = document.getElementById('devDiv')
+const settingsButton = document.getElementById('button_options')
+
+settingsButton.addEventListener('click', () => {
   if (devDivVisible){
-    document.getElementById('devDiv').style.zIndex = '-1'
+    settingsMenu.style.zIndex = '-1'
     devDivVisible = false
   } else {
-    document.getElementById('devDiv').style.zIndex = '1'
+    settingsMenu.style.zIndex = '1'
     devDivVisible = true
+  }
+})
+
+// Add a listener to the document that closes the settings menu when clicking outside of it.
+document.addEventListener('click', (event) => {
+  if (devDivVisible && !settingsMenu.contains(event.target) && !settingsButton.contains(event.target)) {
+    settingsMenu.style.zIndex = '-1'
+    devDivVisible = false
   }
 })
