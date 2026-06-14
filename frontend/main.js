@@ -3,7 +3,8 @@
 *
 * https://github.com/kieler/RailBlocks
 *
-* Copyright 2025 by
+* Copyright 2025-2026 by
+*  + Tokessa Hamann and 
 *  + Henri Heyden and
 *  + Kiel University
 *    + Department of Computer Science
@@ -50,6 +51,15 @@ const theme = Blockly.Theme.defineTheme('theme', {
   startHats: true
 })
 
+// language menu elements
+const languageMenu = document.getElementById('language_menu')
+const languageButton = document.getElementById('button_language')
+const simulationButton = document.getElementById('button_sim')
+const runButton = document.getElementById('button_run')
+const settingsButton = document.getElementById('button_options')
+const saveButton = document.getElementById('button_save')
+const languageOptions = Array.from(document.querySelectorAll('.language_option'))
+
 /** 
  * Helper function to apply the localized HTML labels to the page.
  * @param {String} languageId The id of the language to apply.
@@ -58,17 +68,17 @@ function applyHtmlLabels (languageId) {
   const labels = getHtmlLabels(languageId)
 
   document.title = labels.title
-  document.getElementById('button_sim').title = labels.simulationTitle
-  document.getElementById('button_run').title = labels.deployTitle
-  document.getElementById('button_options').title = labels.optionsTitle
-  document.getElementById('button_language').title = labels.languageButton
+  simulationButton.title = labels.simulationTitle
+  languageButton.title = labels.languageButton
+  runButton.title = labels.deployTitle
+  settingsButton.title = labels.optionsTitle
+  saveButton.title = labels.saveTitle
   document.getElementById('editorLanguage').textContent = labels.languageMenuLabel
   document.getElementById('language_de_label').textContent = getLabel('de')
   document.getElementById('language_en_label').textContent = getLabel('en')
-  document.getElementById('button_save').title = labels.saveTitle
   document.getElementById('fileLoadLabel').title = labels.loadTitle
   document.getElementById("generatedCodeTitle").textContent = labels.generatedCodeTitle
-  document.getElementById("logsTitel").textContent = labels.logsTitle
+  document.getElementById("logsTitle").textContent = labels.logsTitle
   document.getElementById("attributionsTitle").textContent = labels.attributionsTitle
   document.getElementById('attributions_text').innerHTML = labels.attributionsText
 }
@@ -207,8 +217,6 @@ function markUnusedBlocks (workspace) {
     } else if (block.unused && block.getRootBlock().id === 'ROOT') {
       removeBlockWarning(block, 'unused')
       block.unused = false
-      // (remind the loop-warner, that the warning text has been cleared)
-      block.warned = false
     }
   })
 }
@@ -250,17 +258,15 @@ function markWarnings (workspace) {
   workspace.getAllBlocks().forEach(block => {
     const cond = containsLoopBlock(block)
     if (!block.warned && block.type === 'ParallelStatementD' && cond) {
-      addBlockWarning(block, 'unreachable', Blockly.Msg.RAILBLOCKS_WARNING_UNREACHABLE)
+      addBlockWarning(block, 'unreachable', Blockly.Msg.RAILBLOCKS_WARNING_UNREACHABLE_STRONG)
       block.warned = true
     } else if (!block.warned && block.type === 'ConditionalStatementD' && cond) {
-      addBlockWarning(block, 'unreachable', Blockly.Msg.RAILBLOCKS_WARNING_UNREACHABLE)
+      addBlockWarning(block, 'unreachable', Blockly.Msg.RAILBLOCKS_WARNING_UNREACHABLE_WEAK)
       block.warned = true
     } else if (block.warned && !cond) {
       // Close previous warning if it exists.
       removeBlockWarning(block, 'unreachable')
       block.warned = false
-      // (remind the unused-warner that the warning has been cleared)
-      block.unused = false
     }
   })
 }
@@ -358,19 +364,19 @@ function sendSignalToBackend (elementId) {
 }
 
 // Add listeners to simulation and deploy buttons that communicate with backend.
-document.getElementById('button_sim').addEventListener('click', () => {
+simulationButton.addEventListener('click', () => {
   if (!running) {
     sendSignalToBackend('button_sim')
   }
 })
-document.getElementById('button_run').addEventListener('click', () => {
+runButton.addEventListener('click', () => {
   if (!running && confirm(getHtmlLabels(currentLanguage).deployConfirm)) {
     sendSignalToBackend('button_run')
   }
 })
 
 // Add another listener to the save button, which saves the generated file locally through the browser.
-document.getElementById('button_save').addEventListener('click', () => {
+saveButton.addEventListener('click', () => {
   // Get the current workspace state.
   const state = Blockly.serialization.workspaces.save(workspace)
 
@@ -392,12 +398,6 @@ document.getElementById('button_save').addEventListener('click', () => {
   // Clean up.
   URL.revokeObjectURL(url)
 })
-
-// language menu elements
-const languageMenu = document.getElementById('language_menu')
-const languageButton = document.getElementById('button_language')
-const simulationButton = document.getElementById('button_sim')
-const languageOptions = Array.from(document.querySelectorAll('.language_option'))
 
 /**
  * Updates the language menu selection based on the selected language.
@@ -467,7 +467,6 @@ document.getElementById('file_load').addEventListener('change', (event) => {
 // Toggle for visibility of loading/running-gif.
 let devDivVisible = false
 const settingsMenu = document.getElementById('devDiv')
-const settingsButton = document.getElementById('button_options')
 
 settingsButton.addEventListener('click', () => {
   if (devDivVisible){

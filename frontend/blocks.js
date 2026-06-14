@@ -3,7 +3,8 @@
  *
  * https://github.com/kieler/RailBlocks
  *
- * Copyright 2025 by
+ * Copyright 2025-2026 by
+ *  + Tokessa Hamann and 
  *  + Henri Heyden and
  *  + Kiel University
  *    + Department of Computer Science

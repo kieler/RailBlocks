@@ -8,5 +8,6 @@ eslint.config.js
 *.jar
 *.log
 *.tmp
+.vscode
 kieler-gen
 RailController*

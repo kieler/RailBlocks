@@ -3,7 +3,8 @@
 *
 * https://github.com/kieler/RailBlocks
 *
-* Copyright 2025 by
+* Copyright 2025-2026 by
+*  + Tokessa Hamann and 
 *  + Henri Heyden and
 *  + Kiel University
 *    + Department of Computer Science
@@ -101,7 +102,7 @@ Blockly.Blocks.ConditionalStatementD = {
     // Append a named input which contains the +/- buttons and the text.
     this.appendDummyInput('BRANCH_ROOT')
         .appendField(new FieldPlusMinus(), 'PM_FIELD')
-        .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TITEL_TEXT)
+        .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TITLE_TEXT)
 
     // Only allow this block to follow statements and only allow statements to be appended to this.
     this.setPreviousStatement('CStatement')

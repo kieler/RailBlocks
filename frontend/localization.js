@@ -3,9 +3,8 @@
 *
 * https://github.com/kieler/RailBlocks
 *
-* Copyright 2025 by
-*  + Tokessa Hamann and
-*  + Henri Heyden and
+* Copyright 2026 by
+*  + Tokessa Hamann and 
 *  + Kiel University
 *    + Department of Computer Science
 *      + Real-Time and Embedded Systems Group
@@ -25,7 +24,7 @@ import { RailBlocksDeTable } from '../backend/tokens_de.js'
 
 const LANGUAGE_STORAGE_KEY = 'railblocks.language'
 
-// This file containsconstants related to localization, such as retrieving the correct labels for the current language and applying the selected language to the Blockly editor and the page.
+// This file contains constants related to localization, such as retrieving the correct labels for the current language and applying the selected language to the Blockly editor and the page.
 const LANGUAGE_CONFIGS = {
   de: {
     label: 'Deutsch',
@@ -126,7 +125,7 @@ function getStoredLanguage () {
 function applyLanguage (languageId = getStoredLanguage()) {
   const config = LANGUAGE_CONFIGS[languageId]
   Blockly.setLocale(config.locale)
-  Blockly.setLocale(config.tokens)
+  Object.assign(Blockly.Msg, config.tokens)
   document.documentElement.lang = languageId
   return config
 }

@@ -3,9 +3,8 @@
  *
  * https://github.com/kieler/RailBlocks
  *
- * Copyright 2025 by
+ * Copyright 2026 by
  *  + Tokessa Hamann and 
- *  + Henri Heyden and
  *  + Kiel University
  *    + Department of Computer Science
  *      + Real-Time and Embedded Systems Group
@@ -52,6 +51,10 @@ export const RailBlocksEnTable = {
   RAILBLOCKS_CONDITIONAL_TOOLTIP: 'Execute different blocks depending on which track is reached first by a train.',
   RAILBLOCKS_CONDITIONAL_FIRST: 'first',
   RAILBLOCKS_CONDITIONAL_SECOND: 'second',
+  RAILBLOCKS_CONDITIONAL_TEXT_START: 'If',
+  RAILBLOCKS_CONDITIONAL_TEXT_MIDDLE: 'contact of',
+  RAILBLOCKS_CONDITIONAL_TEXT_END: 'is reached first',
+  RAILBLOCKS_CONDITIONAL_TITLE_TEXT: 'Branch',
 
   RAILBLOCKS_PARALLEL_TEXT: 'Parallel',
   RAILBLOCKS_PARALLEL_TOOLTIP: 'Execute multiple blocks at the same time.',
@@ -61,14 +64,6 @@ export const RailBlocksEnTable = {
   RAILBLOCKS_LIGHTS_TOOLTIP: 'Sets a number of lamps to either on or off.\n' + 'Click the plus/minus symbol to control the number of lamps.',
   RAILBLOCKS_LIGHTS_ON: 'on',
   RAILBLOCKS_LIGHTS_OFF: 'off',
-
-  RAILBLOCKS_CONDITIONAL_TEXT_START: 'If',
-  RAILBLOCKS_CONDITIONAL_TEXT_MIDDLE: 'contact of',
-  RAILBLOCKS_CONDITIONAL_TEXT_END: 'is reached first',
-  RAILBLOCKS_CONDITIONAL_FIRST: 'first',
-  RAILBLOCKS_CONDITIONAL_SECOND: 'second',
-  RAILBLOCKS_CONDITIONAL_TITEL_TEXT: 'Branch',
-  RAILBLOCKS_CONDITIONAL_TOOLTIP: 'Execute different blocks depending on which track is reached first by a train.',
 
   RAILBLOCKS_TRACK_TEXT_START: 'Set track',
   RAILBLOCKS_TRACK_TEXT_END: 'to',
@@ -80,8 +75,8 @@ export const RailBlocksEnTable = {
   RAILBLOCKS_POINT_STRAIGHT: 'straight',
   RAILBLOCKS_POINT_BRANCH: 'branch',
 
-  RAILBLOCKS_WARNING_UNREACHABLE: 'Blocks after this may not be reached because of a loop inside this.',
+  RAILBLOCKS_WARNING_UNREACHABLE_STRONG: 'Blocks after this will not be reached because of a loop inside this.',
+  RAILBLOCKS_WARNING_UNREACHABLE_WEAK: 'Blocks after this may not be reached because of a loop inside this.',
   RAILBLOCKS_WARNING_EMPTY_INPUT: 'This block has empty inputs and will cause a syntax error!',
   RAILBLOCKS_WARNING_UNUSED: 'Unused block',
 }
-
