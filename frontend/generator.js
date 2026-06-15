@@ -81,11 +81,11 @@ generator.forBlock.LoopStatement = (block, gen) => {
 }
 
 // This one and the next are value inputs' inputs, which is why they look different.
-generator.forBlock.TrackStatementVectorStop = (block, gen) => {
+generator.forBlock.TrackStatementVectorStop = () => {
   return ['stop.', Order.ATOMIC]
 }
 
-generator.forBlock.TrackStatementVectorDir = (block, gen) => {
+generator.forBlock.TrackStatementVectorDir = (block) => {
   // Very hard to read.
   // "full" and "slow" are the two options, the field value is either "ITEM1" or "ITEM2".
   const SPEED = ['full', 'slow'][block.getFieldValue('SPEED')[4] - 1]

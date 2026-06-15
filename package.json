@@ -8,7 +8,8 @@
   "scripts": {
     "start": "concurrently \"npm:frontend\" \"npm:backend\"",
     "frontend": "vite ./frontend/",
-    "backend": "cd backend && node backend.js"
+    "backend": "cd backend && node backend.js",
+    "lint": "eslint ./"
   },
   "type": "module",
   "dependencies": {
@@ -19,8 +20,10 @@
     "vite": "^6.3.4"
   },
   "devDependencies": {
+    "@cspell/dict-de-de": "^4.1.2",
+    "@cspell/eslint-plugin": "^10.0.1",
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.4.0",
+    "eslint": "^10.5.0",
     "globals": "^17.6.0",
     "typescript-eslint": "^8.34.1"
   },
