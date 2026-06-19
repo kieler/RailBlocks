@@ -1,7 +1,7 @@
 {
   "name": "railblocks",
   "version": "0.1.1",
-  "description": "A Blockly RailSL implementation", 
+  "description": "A Blockly RailSL implementation",
   "author": "Henri Heyden",
   "license": "MIT",
   "main": "main.js",

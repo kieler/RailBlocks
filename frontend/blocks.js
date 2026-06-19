@@ -3,7 +3,8 @@
  *
  * https://github.com/kieler/RailBlocks
  *
- * Copyright 2025 by
+ * Copyright 2025-2026 by
+ *  + Tokessa Hamann and 
  *  + Henri Heyden and
  *  + Kiel University
  *    + Department of Computer Science
@@ -26,7 +27,7 @@ const blockDefinitionsJson = [
   // Additionally, we benefit from this by showing, that rounded corners always mean correct syntax.
   {
     type: 'Program',
-    message0: 'Program\n%1',
+    message0: '%{BKY_RAILBLOCKS_PROGRAM_TEXT}\n%1',
     args0: [
       {
         type: 'input_statement',
@@ -35,12 +36,12 @@ const blockDefinitionsJson = [
       }],
 
     colour: 135,
-    tooltip: 'The program that should be executed.\nAll further commands should be inside this block.'
+    tooltip: '%{BKY_RAILBLOCKS_PROGRAM_TOOLTIP}'
   },
   // New LoopStatement that loops every statement inside the block.
   {
     type: 'LoopStatement',
-    message0: 'Loop\n%1',
+    message0: '%{BKY_RAILBLOCKS_LOOP_TEXT}\n%1',
     args0: [
       {
         type: 'input_statement',
@@ -51,7 +52,7 @@ const blockDefinitionsJson = [
     previousStatement: 'CStatement',
     // nextStatement: 'CStatement',
     colour: 260,
-    tooltip: 'Loops all code inside this block.'
+    tooltip: '%{BKY_RAILBLOCKS_LOOP_TOOLTIP}'
   },
   // Track-Statement Vector Null-vector case.
   // EBNF: stop
@@ -61,24 +62,24 @@ const blockDefinitionsJson = [
     args0: [
       {
         type: 'field_label',
-        text: 'stop'
+        text: '%{BKY_RAILBLOCKS_STOP_TEXT}',
       }
     ],
     output: 'CSetVector',
     colour: 25,
-    tooltip: 'Set track(s) to no velocity.'
+    tooltip: '%{BKY_RAILBLOCKS_STOP_TOOLTIP}'
   },
   // Track-Statement Vector Direction case.
   // EBNF: (slow | full) {reverse}
   {
     type: 'TrackStatementVectorDir',
-    message0: 'speed: %1reverse: %2',
+    message0: '%{BKY_RAILBLOCKS_DIR_TEXT}',
     args0: [
       {
         type: 'field_dropdown',
         options: [
-          ['full', 'ITEM1'],
-          ['slow', 'ITEM2']
+          ['%{BKY_RAILBLOCKS_DIR_FULL_TEXT}', 'ITEM1'],
+          ['%{BKY_RAILBLOCKS_DIR_SLOW_TEXT}', 'ITEM2']
         ],
         name: 'SPEED'
       },
@@ -89,28 +90,28 @@ const blockDefinitionsJson = [
       }
     ],
     output: 'CSetVector',
-    tooltip: 'Set track(s) to velocity with direction.',
+    tooltip: '%{BKY_RAILBLOCKS_DIR_TOOLTIP}',
     colour: 25
   },
   // Contact-Wait-Statement
   // Wait until a segment switch is reached or passed.
   {
     type: 'ContactWaitStatement',
-    message0: 'Wait until %2 contact of %3 is %1',
+    message0: '%{BKY_RAILBLOCKS_CONTACT_WAIT_TEXT}',
     args0: [
       {
         type: 'field_dropdown',
         options: [
-          ['reached', 'ITEM1'],
-          ['passed', 'ITEM2']
+          ['%{BKY_RAILBLOCKS_CONTACT_WAIT_REACHED}', 'ITEM1'],
+          ['%{BKY_RAILBLOCKS_CONTACT_WAIT_PASSED}', 'ITEM2']
         ],
         name: 'CONTACT'
       },
       {
         type: 'field_dropdown',
         options: [
-          ['first', 'ITEM1'],
-          ['second', 'ITEM2']
+          ['%{BKY_RAILBLOCKS_CONTACT_WAIT_FIRST}', 'ITEM1'],
+          ['%{BKY_RAILBLOCKS_CONTACT_WAIT_SECOND}', 'ITEM2']
         ],
         name: 'NUMBER'
       },
@@ -121,7 +122,7 @@ const blockDefinitionsJson = [
       }
     ],
     colour: 240,
-    tooltip: 'Do nothing until a train interacts with a track.',
+    tooltip: '%{BKY_RAILBLOCKS_CONTACT_WAIT_TOOLTIP}',
     previousStatement: 'CStatement',
     nextStatement: 'CStatement'
   },
@@ -129,7 +130,7 @@ const blockDefinitionsJson = [
   // Wait for an amount of seconds.
   {
     type: 'TimeWaitStatement',
-    message0: 'Wait for %1 seconds',
+    message0: '%{BKY_RAILBLOCKS_TIME_WAIT_TEXT}',
     args0: [
       {
         type: 'field_number',
@@ -138,7 +139,7 @@ const blockDefinitionsJson = [
       }
     ],
     colour: 240,
-    tooltip: 'Do nothing for a specific amount of seconds.',
+    tooltip: '%{BKY_RAILBLOCKS_TIME_WAIT_TOOLTIP}',
     previousStatement: 'CStatement',
     nextStatement: 'CStatement'
   },
@@ -146,19 +147,19 @@ const blockDefinitionsJson = [
   // Open or close the crossing.
   {
     type: 'CrossingStatement',
-    message0: '%1 crossing',
+    message0: '%{BKY_RAILBLOCKS_CROSSING_TEXT}',
     args0: [
       {
         type: 'field_dropdown',
         options: [
-          ['Open', 'ITEM1'],
-          ['Close', 'ITEM2']
+          ['%{BKY_RAILBLOCKS_CROSSING_OPEN}', 'ITEM1'],
+          ['%{BKY_RAILBLOCKS_CROSSING_CLOSE}', 'ITEM2']
         ],
         name: 'CROSSING_STATUS'
       }
     ],
     colour: 280,
-    tooltip: 'Toggle the crossing',
+    tooltip: '%{BKY_RAILBLOCKS_CROSSING_TOOLTIP}',
     previousStatement: 'CStatement',
     nextStatement: 'CStatement'
   },
@@ -167,13 +168,13 @@ const blockDefinitionsJson = [
   // Quite literally a race condition... ;)
   {
     type: 'ConditionalStatement',
-    message0: 'If %1 contact of %2 is reached first\n%3else if %4 contact of %5 is reached first\n%6',
+    message0: '%{BKY_RAILBLOCKS_CONDITIONAL_TEXT}\n%6',
     args0: [
       {
         type: 'field_dropdown',
         options: [
-          ['first', 'ITEM1'],
-          ['second', 'ITEM2']
+          ['%{BKY_RAILBLOCKS_CONDITIONAL_FIRST}', 'ITEM1'],
+          ['%{BKY_RAILBLOCKS_CONDITIONAL_SECOND}', 'ITEM2']
         ],
         name: 'CONTACT0'
       },
@@ -190,8 +191,8 @@ const blockDefinitionsJson = [
       {
         type: 'field_dropdown',
         options: [
-          ['first', 'ITEM1'],
-          ['second', 'ITEM2']
+          ['%{BKY_RAILBLOCKS_CONDITIONAL_FIRST}', 'ITEM1'],
+          ['%{BKY_RAILBLOCKS_CONDITIONAL_SECOND}', 'ITEM2']
         ],
         name: 'CONTACT1'
       },
@@ -207,7 +208,7 @@ const blockDefinitionsJson = [
       }
     ],
     colour: 300,
-    tooltip: 'Execute different blocks depending on which track is reached first by a train.',
+    tooltip: '%{BKY_RAILBLOCKS_CONDITIONAL_TOOLTIP}',
     previousStatement: 'CStatement',
     nextStatement: 'CStatement'
   },
@@ -215,7 +216,7 @@ const blockDefinitionsJson = [
   // Still inside implementation because of the sample solutions, but the user can't create this block.
   {
     type: 'ParallelStatement',
-    message0: 'Parallel\n%1%2',
+    message0: '%{BKY_RAILBLOCKS_PARALLEL_TEXT}\n%1%2',
     args0: [
       {
         type: 'input_statement',
@@ -229,82 +230,84 @@ const blockDefinitionsJson = [
       }
     ],
     colour: 190,
-    tooltip: 'Execute multiple blocks at the same time.',
+    tooltip: '%{BKY_RAILBLOCKS_PARALLEL_TOOLTIP}',
     previousStatement: 'CStatement',
     nextStatement: 'CStatement'
   }
 ]
 
-// Create the toolbox with all blocks and literals we need
-const toolbox = {
-  kind: 'flyoutToolbox',
-  // Between the different groups we add labels.
-  contents: [
-    {
-      kind: 'label',
-      text: 'Set Statements'
-    },
-    {
-      kind: 'block',
-      type: 'TrackStatement'
-    },
-    {
-      kind: 'block',
-      type: 'TrackStatementVectorStop'
-    },
-    {
-      kind: 'block',
-      type: 'TrackStatementVectorDir'
-    },
-    {
-      kind: 'block',
-      type: 'PointStatement'
-    },
-    {
-      kind: 'block',
-      type: 'CrossingStatement'
-    },
-    {
-      kind: 'block',
-      type: 'LightStatement'
-    },
-    {
-      kind: 'sep',
-      gap: 60
-    },
-    {
-      kind: 'label',
-      text: 'Wait Statements'
-    },
-    {
-      kind: 'block',
-      type: 'TimeWaitStatement'
-    },
-    {
-      kind: 'block',
-      type: 'ContactWaitStatement'
-    },
-    {
-      kind: 'sep',
-      gap: 60
-    },
-    {
-      kind: 'label',
-      text: 'Control Flow'
-    },
-    {
-      kind: 'block',
-      type: 'ConditionalStatementD'
-    },
-    {
-      kind: 'block',
-      type: 'ParallelStatementD'
-    },
-    {
-      kind: 'block',
-      type: 'LoopStatement'
-    }
-  ]
+// Create the toolbox with all blocks and literals we need for the correct language
+function createToolbox (labels) {
+  return {
+    kind: 'flyoutToolbox',
+    // Between the different groups we add labels.
+    contents: [
+      {
+        kind: 'label',
+        text: labels.setStatements
+      },
+      {
+        kind: 'block',
+        type: 'TrackStatement'
+      },
+      {
+        kind: 'block',
+        type: 'TrackStatementVectorStop'
+      },
+      {
+        kind: 'block',
+        type: 'TrackStatementVectorDir'
+      },
+      {
+        kind: 'block',
+        type: 'PointStatement'
+      },
+      {
+        kind: 'block',
+        type: 'CrossingStatement'
+      },
+      {
+        kind: 'block',
+        type: 'LightStatement'
+      },
+      {
+        kind: 'sep',
+        gap: 60
+      },
+      {
+        kind: 'label',
+        text: labels.waitStatements
+      },
+      {
+        kind: 'block',
+        type: 'TimeWaitStatement'
+      },
+      {
+        kind: 'block',
+        type: 'ContactWaitStatement'
+      },
+      {
+        kind: 'sep',
+        gap: 60
+      },
+      {
+        kind: 'label',
+        text: labels.controlFlow
+      },
+      {
+        kind: 'block',
+        type: 'ConditionalStatementD'
+      },
+      {
+        kind: 'block',
+        type: 'ParallelStatementD'
+      },
+      {
+        kind: 'block',
+        type: 'LoopStatement'
+      }
+    ]
+  }
 }
 
-export { blockDefinitionsJson, toolbox }
+export { blockDefinitionsJson, createToolbox }

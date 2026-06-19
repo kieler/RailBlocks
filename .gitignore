@@ -1,0 +1,13 @@
+node_modules
+pack
+out
+lib
+eslint.config.js
+*.railsl
+*.vsix
+*.jar
+*.log
+*.tmp
+.vscode
+kieler-gen
+RailController*

@@ -3,7 +3,8 @@
 *
 * https://github.com/kieler/RailBlocks
 *
-* Copyright 2025 by
+* Copyright 2025-2026 by
+*  + Tokessa Hamann and 
 *  + Henri Heyden and
 *  + Kiel University
 *    + Department of Computer Science
@@ -17,17 +18,19 @@
 */
 
 import * as Blockly from 'blockly/core'
-import * as En from 'blockly/msg/en'
 
-import { blockDefinitionsJson, toolbox } from './blocks.js'
 import './renderer.js'
 import './dynamic_blocks.js'
+import { blockDefinitionsJson, createToolbox } from './blocks.js'
 import { compile } from './generator.js'
+import { getLabel, getToolBoxLabels, getHtmlLabels, getStoredLanguage, applyLanguage, LANGUAGE_STORAGE_KEY } from './localization.js'
 
 // MAIN PROGRAM
+const workspaceStorageKey = 'railblocks.workspace'
 
-// Important for block descriptions!
-Blockly.setLocale(En)
+// Apply the stored language 
+const currentLanguage = getStoredLanguage()
+applyLanguage(currentLanguage)
 
 // Set block definitions from blocks.js
 const blockDefinitions = Blockly.common.createBlockDefinitionsFromJsonArray(blockDefinitionsJson)
@@ -48,9 +51,41 @@ const theme = Blockly.Theme.defineTheme('theme', {
   startHats: true
 })
 
+// language menu elements
+const languageMenu = document.getElementById('language_menu')
+const languageButton = document.getElementById('button_language')
+const simulationButton = document.getElementById('button_sim')
+const runButton = document.getElementById('button_run')
+const settingsButton = document.getElementById('button_options')
+const saveButton = document.getElementById('button_save')
+const languageOptions = Array.from(document.querySelectorAll('.language_option'))
+
+/** 
+ * Helper function to apply the localized HTML labels to the page.
+ * @param {String} languageId The id of the language to apply.
+*/
+function applyHtmlLabels (languageId) {
+  const labels = getHtmlLabels(languageId)
+
+  document.title = labels.title
+  simulationButton.title = labels.simulationTitle
+  languageButton.title = labels.languageButton
+  runButton.title = labels.deployTitle
+  settingsButton.title = labels.optionsTitle
+  saveButton.title = labels.saveTitle
+  document.getElementById('editorLanguage').textContent = labels.languageMenuLabel
+  document.getElementById('language_de_label').textContent = getLabel('de')
+  document.getElementById('language_en_label').textContent = getLabel('en')
+  document.getElementById('fileLoadLabel').title = labels.loadTitle
+  document.getElementById("generatedCodeTitle").textContent = labels.generatedCodeTitle
+  document.getElementById("logsTitle").textContent = labels.logsTitle
+  document.getElementById("attributionsTitle").textContent = labels.attributionsTitle
+  document.getElementById('attributions_text').innerHTML = labels.attributionsText
+}
+
 // Pass the defined toolbox to the div in index.html.
 const workspace = Blockly.inject('blocklyDiv', {
-  toolbox,
+  toolbox: createToolbox(getToolBoxLabels(currentLanguage)),
   theme,
   // Load the custom renderer defined in renderer.js
   // Should not make a big difference but is advised to be loaded for extensions.
@@ -65,15 +100,108 @@ const workspace = Blockly.inject('blocklyDiv', {
   }
 })
 
-// Add one program block.
-const program = workspace.newBlock('Program', 'ROOT')
-program.initSvg()
-program.render()
-program.setDeletable(false)
-program.setMovable(false)
-program.setEditable(false)
-// Add some padding to border
-program.moveBy(10, 10)
+/**
+ * Restores the workspace state from localStorage if available.
+ * @param {Blockly.WorkspaceSvg} workspace The workspace to restore.
+ * @returns {boolean} True if the workspace state was successfully restored, false otherwise.
+ */
+function restoreWorkspaceState (workspace) {
+  const savedWorkspace = window.localStorage.getItem(workspaceStorageKey)
+  if (!savedWorkspace) {
+    return false
+  }
+
+  try {
+    const state = JSON.parse(savedWorkspace)
+    Blockly.serialization.workspaces.load(state, workspace)
+    window.localStorage.removeItem(workspaceStorageKey)
+    return true
+  } catch (error) {
+    window.localStorage.removeItem(workspaceStorageKey)
+    console.error('Error occurred while restoring workspace state:', error)
+    return false
+  }
+}
+
+/**
+ * Saves the current workspace state to localStorage for later restoration.
+ * @param {Blockly.WorkspaceSvg} workspace The workspace to save.
+ */
+function saveWorkspaceState (workspace) {
+  const state = Blockly.serialization.workspaces.save(workspace)
+  window.localStorage.setItem(workspaceStorageKey, JSON.stringify(state))
+}
+
+const restoredWorkspace = restoreWorkspaceState(workspace)
+
+// If there was no workspace to restore, add a default program block.
+if (!restoredWorkspace) {
+  // Add one program block.
+  const program = workspace.newBlock('Program', 'ROOT')
+  program.initSvg()
+  program.render()
+  program.setDeletable(false)
+  program.setMovable(false)
+  program.setEditable(false)
+  // Add some padding to border
+  program.moveBy(10, 10)
+}
+
+compile(workspace)
+
+// Tracks all active warnings per block so multiple warning sources can coexist.
+const activeBlockWarnings = new Map()
+
+/**
+ * Updates the visible warning text of a block from the warning map.
+ * If no warnings remain, the warning text is cleared.
+ * @param {Blockly.Block} block Block whose warning text should be updated.
+ */
+function syncBlockWarningText (block) {
+  const warningsByType = activeBlockWarnings.get(block.id)
+
+  if (!warningsByType || warningsByType.size === 0) {
+    block.setWarningText(null)
+    activeBlockWarnings.delete(block.id)
+    return
+  }
+
+  block.setWarningText("- " + Array.from(warningsByType.values()).join('\n- '))
+}
+
+/**
+ * Adds or updates a warning for a block.
+ * @param {Blockly.Block} block Block to warn.
+ * @param {String} warningKey Unique key for the warning source.
+ * @param {String} warningText Warning text to display.
+ */
+function addBlockWarning (block, warningKey, warningText) {
+  let warningsByType = activeBlockWarnings.get(block.id)
+
+  if (!warningsByType) {
+    warningsByType = new Map()
+    activeBlockWarnings.set(block.id, warningsByType)
+  }
+
+  warningsByType.set(warningKey, warningText)
+  syncBlockWarningText(block)
+}
+
+/**
+ * Removes a warning from a block.
+ * @param {Blockly.Block} block Block to update.
+ * @param {String} warningKey Unique key for the warning source.
+ */
+function removeBlockWarning (block, warningKey) {
+  const warningsByType = activeBlockWarnings.get(block.id)
+
+  if (!warningsByType) {
+    return
+  }
+
+  warningsByType.delete(warningKey)
+  syncBlockWarningText(block)
+}
 
 /**
  * Warns the user by indicating all blocks that are not inside the program block.
@@ -84,13 +212,11 @@ function markUnusedBlocks (workspace) {
   workspace.getAllBlocks().forEach(block => {
     // getRootBlock() returns the topmost block in a stack.
     if (!block.unused && block.getRootBlock().id !== 'ROOT') {
-      block.setWarningText('Unused block')
+      addBlockWarning(block, 'unused', Blockly.Msg.RAILBLOCKS_WARNING_UNUSED)
       block.unused = true
     } else if (block.unused && block.getRootBlock().id === 'ROOT') {
-      block.setWarningText(null)
+      removeBlockWarning(block, 'unused')
       block.unused = false
-      // (remind the loop-warner, that the warning text has been cleared)
-      block.warned = false
     }
   })
 }
@@ -132,17 +258,15 @@ function markWarnings (workspace) {
   workspace.getAllBlocks().forEach(block => {
     const cond = containsLoopBlock(block)
     if (!block.warned && block.type === 'ParallelStatementD' && cond) {
-      block.setWarningText('Blocks after this will not be reached because of a loop inside this.')
+      addBlockWarning(block, 'unreachable', Blockly.Msg.RAILBLOCKS_WARNING_UNREACHABLE_STRONG)
       block.warned = true
     } else if (!block.warned && block.type === 'ConditionalStatementD' && cond) {
-      block.setWarningText('Blocks after this may not be reached because of a loop inside this.')
+      addBlockWarning(block, 'unreachable', Blockly.Msg.RAILBLOCKS_WARNING_UNREACHABLE_WEAK)
       block.warned = true
     } else if (block.warned && !cond) {
       // Close previous warning if it exists.
-      block.setWarningText(null)
+      removeBlockWarning(block, 'unreachable')
       block.warned = false
-      // (remind the unused-warner that the warning has been cleared)
-      block.unused = false
     }
   })
 }
@@ -163,11 +287,11 @@ function markUnconnectedBlocks (workspace) {
     }
 
     // Set the warnings if appropriate.
-    if (cond && !block.unused) {
-      block.setWarningText('This block has empty inputs and will cause a syntax error!')
+    if (cond) {
+      addBlockWarning(block, 'empty_input', Blockly.Msg.RAILBLOCKS_WARNING_EMPTY_INPUT)
       block.unconnected = true
     } else if (!cond && block.unconnected) {
-      block.setWarningText(null)
+      removeBlockWarning(block, 'empty_input')
       block.unconnected = false
     }
   })
@@ -240,19 +364,19 @@ function sendSignalToBackend (elementId) {
 }
 
 // Add listeners to simulation and deploy buttons that communicate with backend.
-document.getElementById('button_sim').addEventListener('click', () => {
+simulationButton.addEventListener('click', () => {
   if (!running) {
     sendSignalToBackend('button_sim')
   }
 })
-document.getElementById('button_run').addEventListener('click', () => {
-  if (!running && confirm("Really deploy on the railway?")) {
+runButton.addEventListener('click', () => {
+  if (!running && confirm(getHtmlLabels(currentLanguage).deployConfirm)) {
     sendSignalToBackend('button_run')
   }
 })
 
 // Add another listener to the save button, which saves the generated file locally through the browser.
-document.getElementById('button_save').addEventListener('click', () => {
+saveButton.addEventListener('click', () => {
   // Get the current workspace state.
   const state = Blockly.serialization.workspaces.save(workspace)
 
@@ -275,6 +399,55 @@ document.getElementById('button_save').addEventListener('click', () => {
   URL.revokeObjectURL(url)
 })
 
+/**
+ * Updates the language menu selection based on the selected language.
+ * @param {String} selectedLanguage The id of the language to select.
+ */
+function updateLanguageMenuSelection (selectedLanguage) {
+  languageOptions.forEach(option => {
+    const marker = option.querySelector('.language_option_marker')
+    if (option.dataset.language === selectedLanguage) {
+      option.classList.add('active')
+      option.setAttribute('aria-pressed', 'true')
+      marker.textContent = '>'
+    } else {
+      option.classList.remove('active')
+      option.setAttribute('aria-pressed', 'false')
+      marker.textContent = ''
+    }
+  })
+}
+
+applyHtmlLabels(currentLanguage)
+updateLanguageMenuSelection(currentLanguage)
+
+// Toggle for language menu visibility and listeners for the language options.
+languageButton.addEventListener('click', () => {
+  languageMenu.style.display = languageMenu.style.display === 'none' ? 'block' : 'none'
+})
+
+// Add listeners to the language options that save the workspace, set the new language and reload the page.
+languageOptions.forEach(option => {
+  option.addEventListener('click', () => {
+    const selectedLanguage = option.dataset.language
+    if (selectedLanguage === currentLanguage) {
+      languageMenu.style.display = 'none'
+      return
+    }
+
+    saveWorkspaceState(workspace)
+    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, selectedLanguage)
+    window.location.reload()
+  })
+})
+
+// Add a listener to the document that closes the language menu when clicking outside of it.
+document.addEventListener('click', (event) => {
+  if (!languageMenu.contains(event.target) && !languageButton.contains(event.target)) {
+    languageMenu.style.display = 'none'
+  }
+})
+
 // Add another listener for the load file, which imports a local json file through the browser
 // and subsequently loads the saved workspace from it.
 document.getElementById('file_load').addEventListener('change', (event) => {
@@ -293,12 +466,22 @@ document.getElementById('file_load').addEventListener('change', (event) => {
 
 // Toggle for visibility of loading/running-gif.
 let devDivVisible = false
-document.getElementById('button_options').addEventListener('click', () => {
+const settingsMenu = document.getElementById('devDiv')
+
+settingsButton.addEventListener('click', () => {
   if (devDivVisible){
-    document.getElementById('devDiv').style.zIndex = '-1'
+    settingsMenu.style.zIndex = '-1'
     devDivVisible = false
   } else {
-    document.getElementById('devDiv').style.zIndex = '1'
+    settingsMenu.style.zIndex = '1'
     devDivVisible = true
+  }
+})
+
+// Add a listener to the document that closes the settings menu when clicking outside of it.
+document.addEventListener('click', (event) => {
+  if (devDivVisible && !settingsMenu.contains(event.target) && !settingsButton.contains(event.target)) {
+    settingsMenu.style.zIndex = '-1'
+    devDivVisible = false
   }
 })

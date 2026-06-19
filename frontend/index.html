@@ -5,8 +5,9 @@ RailBlocks - A Blockly RailSL Implementation
 
 https://github.com/kieler/RailBlocks
 
-Copyright 2025 by
- + Henri Heyden and
+ Copyright 2025-2026 by
+   + Tokessa Hamann and 
+   + Henri Heyden and
  + Kiel University
    + Department of Computer Science
      + Real-Time and Embedded Systems Group
@@ -25,7 +26,7 @@ SPDX-License-Identifier: MIT
 </head>
 
 <body>
-    <div style='position: absolute; top: 1dvh; right: 1dvw; z-index: 1; background: white; text-align: right'>
+    <div style='position: absolute; top: 1dvh; right: 2.5dvw; z-index: 1; background: white; text-align: right'>
         <h1> RailBlocks </h1>
         <!-- <img src="icons/favicon.ico" style="width:80px;height:80px;" alt="Blockly for RailSL Logo"> -->
 
@@ -36,6 +37,23 @@ SPDX-License-Identifier: MIT
         <button id="button_run" style="font-family: arial, sans-serif; font-size: 14pt" title="Deploy on railway">
             <img src="icons/train-execute.svg" style="width:19px;height:19px" alt="Deploy on railway">
         </button> 
+
+        <div class="language-switcher">
+            <button id="button_language" class="top_control_button" style="font-family: arial, sans-serif; font-size: 14pt" title="Choose editor language">
+                <img src="icons/language.svg" style="width:19px;height:19px" alt="Choose language">
+            </button>
+            <div id="language_menu" style="display: none;" class="language_menu_panel">
+                <span id="editorLanguage" class="language_menu_label">Editor language</span>
+                <button type="button" class="language_option" data-language="de">
+                    <span class="language_option_marker" aria-hidden="true"></span>
+                    <span id="language_de_label">Deutsch</span>
+                </button>
+                <button type="button" class="language_option" data-language="en">
+                    <span class="language_option_marker" aria-hidden="true"></span>
+                    <span id="language_en_label">English</span>
+                </button>
+            </div>
+        </div>
 
         <button id="button_options" style="font-family: arial, sans-serif; font-size: 14pt" title="View developer information">
             <img src="icons/settings.svg" style="width:19px;height:19px" alt="View developer information">
@@ -49,25 +67,25 @@ SPDX-License-Identifier: MIT
     <div id="blocklyDiv"></div>
 
     <!-- Dev-Div -->
-    <div id="devDiv" style="position: absolute; bottom: 1dvh; right: 1dvw; padding:5px; background: white; border: 2px solid lightgray; overflow: scroll; width: 20dvw; height: 85dvh; z-index: -1">
+    <div id="devDiv" style="position: absolute; bottom: 1dvh; right: 2.5dvw; padding:5px; background: white; border: 2px solid lightgray; overflow: scroll; width: 20dvw; height: 85dvh; z-index: -1">
         <!-- Buttons to save and load a workspace -->
-        <button id="button_save" style="font-family: arial, sans-serif; font-size: 14pt" title="Save current workspace to disk">
+        <button id="button_save" class="file-label top_control_button" style="font-family: arial, sans-serif; font-size: 14pt" title="Save current workspace to disk">
             <img src="icons/disk.svg" style="width:19px;height:19px" alt="Save current workspace to disk">
         </button>
-        <label for="file_load" class="file-label" style="font-family: arial, sans-serif; font-size: 14pt; display: inline-block" title="Load workspace from disk">
-            <img src="icons/file-import.svg" style="width:19px;height:19px" alt="Load workspace from disk">
+        <label for="file_load" class="file-label top_control_button" style="font-family: arial, sans-serif; font-size: 14pt" title="Load workspace from disk">
+            <img src="icons/file-import.svg" style="width:19px;height:19px" alt="Load workspace from disk" id="fileLoadLabel">
         </label>
         <input type="file" id="file_load" accept="application/json"/>
 
-        <h2>Generated RailSL</h2>
+        <h2 id="generatedCodeTitle">Generated RailSL</h2>
         <div class="code" id="generated code">Start:
 
     End.</div>
-        <h2>Logs</h2>
+        <h2 id="logsTitle">Logs</h2>
         <pre id="output"></pre>
 
-        <h2>Attributions</h2>
-        Images created/distributed by user jucy_fish (train icon), Freepik (hourglass gif) and <a href="https://www.flaticon.com/" title="icons source">Flaticon.</a>
+        <h2 id="attributionsTitle">Attributions</h2>
+        <p id="attributions_text">Images created/distributed by user jucy_fish (train icon), Freepik (hourglass gif) and <a href="https://www.flaticon.com/" title="icons source">Flaticon.</a></p>
     </div>
 
     <!-- Load everything JavaScript-related, which has to be done after the blockly-div is initialized. -->
