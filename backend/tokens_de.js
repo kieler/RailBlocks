@@ -34,10 +34,10 @@ export const RailBlocksDeTable = {
 
   RAILBLOCKS_CONTACT_WAIT_TEXT: 'Warte bis %2 Kontakt von %3 %1 wurde',
   RAILBLOCKS_CONTACT_WAIT_TOOLTIP: 'Tue nichts bis ein Zug mit einem Gleis interagiert.',
-  RAILBLOCKS_CONTACT_WAIT_REACHED: '1',
-  RAILBLOCKS_CONTACT_WAIT_PASSED: '2',
-  RAILBLOCKS_CONTACT_WAIT_FIRST: 'erreicht',
-  RAILBLOCKS_CONTACT_WAIT_SECOND: 'passiert',
+  RAILBLOCKS_CONTACT_WAIT_REACHED: 'erreicht',
+  RAILBLOCKS_CONTACT_WAIT_PASSED: 'passiert',
+  RAILBLOCKS_CONTACT_WAIT_FIRST: 'erster',
+  RAILBLOCKS_CONTACT_WAIT_SECOND: 'zweiter',
 
   RAILBLOCKS_TIME_WAIT_TEXT: 'Warte für %1 Sekunde(n)',
   RAILBLOCKS_TIME_WAIT_TOOLTIP: 'Tue nichts für eine bestimmte Zeit.',
