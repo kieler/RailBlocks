@@ -12,6 +12,7 @@ export default defineConfig([
 		rules: {
 			"no-unused-vars": "warn",
 			"no-undef": "warn",
+			"eol-last": "error",
 			'@cspell/spellchecker': ['warn', { 
 				report: 'simple',  
 				cspell: {

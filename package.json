@@ -2,7 +2,8 @@
   "name": "railblocks",
   "version": "0.1.1",
   "description": "A Blockly RailSL implementation",
-  "author": "Henri Heyden + Tokessa Hamann",
+  "author": "Henri Heyden",
+  "contributors": ["Tokessa Hamann"],
   "license": "MIT",
   "main": "main.js",
   "scripts": {
