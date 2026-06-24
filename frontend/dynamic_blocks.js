@@ -228,7 +228,7 @@ Blockly.Blocks.TrackStatement = {
     valueInput.appendField(Blockly.Msg.RAILBLOCKS_TRACK_TEXT_END)
 
     // Now the block looks like this:
-    // ValueInput["Set track" [Comma seperated dropdown fields] "to: "] -<
+    // ValueInput["Set track" [Comma separated dropdown fields] "to: "] -<
   }
 }
 

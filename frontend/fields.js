@@ -3,7 +3,8 @@
  *
  * https://github.com/kieler/RailBlocks
  *
- * Copyright 2025 by
+ * Copyright 2025-2026 by
+ *  + Tokessa Hamann
  *  + Henri Heyden and
  *  + Kiel University
  *    + Department of Computer Science
@@ -52,6 +53,7 @@ export class FieldPlusMinus extends Blockly.Field {
      * @param margin -- Ignored inherited parameter.
      * @private
      */
+  // eslint-disable-next-line no-unused-vars
   updateSize_ (margin) {
     this.size_ = new Blockly.utils.Size(10, 20)
   }
@@ -198,5 +200,6 @@ export class FieldPlusMinus extends Blockly.Field {
 
   getText () { return '' }
   getValue () {}
+  // eslint-disable-next-line no-unused-vars
   setValue (_0, _1) {}
 }
