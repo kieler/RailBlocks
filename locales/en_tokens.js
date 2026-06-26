@@ -17,7 +17,7 @@
  */
 
 // This file contains the English translations for the block labels, tooltips and warnings.
-export const RailBlocksEnTable = {
+export const en_tokens = {
   RAILBLOCKS_PROGRAM_TEXT: 'Program',
   RAILBLOCKS_PROGRAM_TOOLTIP: 'The program that should be executed.\nAll further commands should be inside this block.',
 

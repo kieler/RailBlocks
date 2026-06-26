@@ -17,7 +17,7 @@
  */
 
 // This file contains the German translations for the block labels, tooltips and warnings.
-export const RailBlocksDeTable = {
+export const de_tokens = {
   RAILBLOCKS_PROGRAM_TEXT: 'Programm',
   RAILBLOCKS_PROGRAM_TOOLTIP: 'Das Programm, das ausgeführt werden soll.\n Alle weiteren Befehle sollten innerhalb dieses Blocks stehen.',
 
