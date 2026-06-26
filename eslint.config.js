@@ -20,7 +20,7 @@ export default defineConfig([
 					import: cspellImport,
 					caseSensitive: false,
 				},
-				customWordListFile: "./backend/customWords.txt", // add custom words, that spellchecker doesn't know
+				customWordListFile: "./customWords.txt", // add custom words, that spellchecker doesn't know
 			}], 
 		},
 	},

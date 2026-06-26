@@ -3,14 +3,18 @@
   "version": "0.1.1",
   "description": "A Blockly RailSL implementation",
   "author": "Henri Heyden",
-  "contributors": ["Tokessa Hamann"],
+  "contributors": [
+    "Tokessa Hamann"
+  ],
   "license": "MIT",
   "main": "main.js",
   "scripts": {
     "start": "concurrently \"npm:frontend\" \"npm:backend\"",
     "frontend": "vite ./frontend/",
     "backend": "cd backend && node backend.js",
-    "lint": "eslint ./"
+    "lint": "eslint ./",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "type": "module",
   "dependencies": {
@@ -26,6 +30,7 @@
     "@eslint/js": "^10.0.1",
     "eslint": "^10.5.0",
     "globals": "^17.6.0",
-    "typescript-eslint": "^8.34.1"
+    "typescript-eslint": "^8.34.1",
+    "vitest": "^4.1.9"
   }
 }

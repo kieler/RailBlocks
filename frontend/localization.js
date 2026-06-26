@@ -17,65 +17,16 @@
 */
 
 import * as Blockly from 'blockly/core'
-import * as En from 'blockly/msg/en'
-import * as De from 'blockly/msg/de'
-import { RailBlocksEnTable } from '../backend/tokens_en.js'
-import { RailBlocksDeTable } from '../backend/tokens_de.js'
+import { en_locale } from '../locales/en/en_locale'
+import { de_locale } from '../locales/de/de_locale'
+
 
 const LANGUAGE_STORAGE_KEY = 'railblocks.language'
 
 // This file contains constants related to localization, such as retrieving the correct labels for the current language and applying the selected language to the Blockly editor and the page.
 const LANGUAGE_CONFIGS = {
-  de: {
-    label: 'Deutsch',
-    locale: De,
-    tokens: RailBlocksDeTable,
-    htmlLabels: {
-      title: 'RailBlocks',
-      simulationTitle: 'Simulieren',
-      deployTitle: 'Auf der Anlage ausführen',
-      optionsTitle: 'Entwicklerinformationen anzeigen',
-      languageButton: 'Sprache',
-      languageMenuLabel: 'Editorsprache',
-      generatedCodeTitle: 'Generierter RailSL',
-      logsTitle: 'Protokolle',
-      deployConfirm: 'Wirklich auf der Anlage ausführen?',
-      saveTitle: 'Aktuellen Arbeitsbereich auf der Festplatte speichern',
-      loadTitle: 'Arbeitsbereich von der Festplatte laden',
-      attributionsTitle: 'Danksagungen',
-      attributionsText: 'Bilder erstellt und verteilt von user jucy_fish (Zugsymbol), Freepik (Sanduhr-GIF), <a href="https://www.flaticon.com/" title="icons source 1">Flaticon</a> und <a href="https://www.svgrepo.com" title="icons source 2">svgrepo</a>.'
-    },
-    toolboxLabels: {
-      setStatements: 'Setzanweisungen',
-      waitStatements: 'Warteanweisungen',
-      controlFlow: 'Kontrollfluss'
-    }
-  },
-  en: {
-    label: 'English',
-    locale: En,
-    tokens: RailBlocksEnTable,
-    htmlLabels: {
-      title: 'RailBlocks',
-      simulationTitle: 'Simulate',
-      deployTitle: 'Deploy on railway',
-      optionsTitle: 'View developer information',
-      languageButton: 'Language',
-      languageMenuLabel: 'Editor language',
-      generatedCodeTitle: 'Generated RailSL',
-      logsTitle: 'Logs',
-      deployConfirm: 'Really deploy on the railway?',
-      saveTitle: 'Save current workspace to disk',
-      loadTitle: 'Load workspace from disk',
-      attributionsTitle: 'Attributions',
-      attributionsText: 'Images created and distributed by user jucy_fish (train icon), Freepik (hourglass gif), <a href="https://www.flaticon.com/" title="icons source 1">Flaticon</a> and <a href="https://www.svgrepo.com" title="icons source 2">svgrepo</a>.'
-    },
-    toolboxLabels: {
-      setStatements: 'Set Statements',
-      waitStatements: 'Wait Statements',
-      controlFlow: 'Control Flow'
-    }
-  }
+  en: en_locale,
+  de: de_locale
 }
 
 /**
