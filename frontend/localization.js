@@ -17,8 +17,8 @@
 */
 
 import * as Blockly from 'blockly/core'
-import { en_locale } from '../locales/en_locale'
-import { de_locale } from '../locales/de_locale'
+import { en_locale } from '../locales/en/en_locale'
+import { de_locale } from '../locales/de/de_locale'
 
 
 const LANGUAGE_STORAGE_KEY = 'railblocks.language'

@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'vitest';
 
-import { en_locale } from '../locales/en_locale.js';
-import { de_locale } from '../locales/de_locale.js';
+import { en_locale } from '../locales/en/en_locale.js';
+import { de_locale } from '../locales/de/de_locale.js';
 
 const translations = { en_locale, de_locale };
 
