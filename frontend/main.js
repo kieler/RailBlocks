@@ -23,7 +23,7 @@ import './renderer.js'
 import './dynamic_blocks.js'
 import { blockDefinitionsJson, createToolbox } from './blocks.js'
 import { compile } from './generator.js'
-import { getLabel, getToolBoxLabels, getHtmlLabels, getStoredLanguage, applyLanguage, LANGUAGE_STORAGE_KEY } from './localization.js'
+import { getLabel, getToolBoxLabels, getHtmlLabels, getStoredLanguage, applyLanguage, LANGUAGE_STORAGE_KEY, LANGUAGE_CONFIGS } from './localization.js'
 
 // MAIN PROGRAM
 const workspaceStorageKey = 'railblocks.workspace'
@@ -53,11 +53,42 @@ const theme = Blockly.Theme.defineTheme('theme', {
 
 // language menu elements
 const languageMenu = document.getElementById('language_menu')
+const languageOptionsContainer = document.getElementById('language_options')
 const languageButton = document.getElementById('button_language')
 const simulationButton = document.getElementById('button_sim')
 const runButton = document.getElementById('button_run')
 const settingsButton = document.getElementById('button_options')
 const saveButton = document.getElementById('button_save')
+
+/**
+ * Creates a language option button for the language switcher.
+ * @param {String} languageId The id of the language to render.
+ * @param {Object} languageConfig The config entry for the language.
+ * @returns {HTMLButtonElement} The rendered language button.
+ */
+function createLanguageOptionButton (languageId, languageConfig) {
+  const button = document.createElement('button')
+  button.type = 'button'
+  button.className = 'language_option'
+  button.dataset.language = languageId
+  button.setAttribute('aria-pressed', 'false')
+
+  const marker = document.createElement('span')
+  marker.className = 'language_option_marker'
+  marker.setAttribute('aria-hidden', 'true')
+
+  const label = document.createElement('span')
+  label.className = 'language_option_label'
+  label.textContent = languageConfig.label
+
+  button.append(marker, label)
+  return button
+}
+
+Object.entries(LANGUAGE_CONFIGS).forEach(([languageId, languageConfig]) => {
+  languageOptionsContainer.appendChild(createLanguageOptionButton(languageId, languageConfig))
+})
+
 const languageOptions = Array.from(document.querySelectorAll('.language_option'))
 
 /** 
@@ -74,9 +105,13 @@ function applyHtmlLabels (languageId) {
   settingsButton.title = labels.optionsTitle
   saveButton.title = labels.saveTitle
   document.getElementById('editorLanguage').textContent = labels.languageMenuLabel
-  document.getElementById('language_de_label').textContent = getLabel('de')
-  document.getElementById('language_en_label').textContent = getLabel('en')
-  document.getElementById('language_zh_label').textContent = getLabel('zh')
+  languageOptions.forEach(option => {
+    const languageId = option.dataset.language
+    const label = option.querySelector('.language_option_label')
+    if (label && languageId) {
+      label.textContent = getLabel(languageId)
+    }
+  })
   document.getElementById('fileLoadLabel').title = labels.loadTitle
   document.getElementById("generatedCodeTitle").textContent = labels.generatedCodeTitle
   document.getElementById("logsTitle").textContent = labels.logsTitle
