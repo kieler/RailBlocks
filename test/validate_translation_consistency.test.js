@@ -1,10 +1,6 @@
 import { describe, test, expect } from 'vitest';
 
-import { en_locale } from '../locales/en/en_locale.js';
-import { de_locale } from '../locales/de/de_locale.js';
-import { zh_locale } from '../locales/zh/zh_locale.js';
-
-const translations = { en_locale, de_locale, zh_locale };
+import { LANGUAGE_CONFIGS } from '../frontend/localization.js';
 
 function compare(reference, translation, path = '') {
     const missing = [];
@@ -60,8 +56,8 @@ function findNonStrings(obj, path = '') {
 
 describe('Localization', () => {
     test('all localization files contain the same keys', () => {
-        for (const [name, translation] of Object.entries(translations)) {
-            const { missing, extra } = compare(en_locale, translation);
+        for (const [name, translation] of Object.entries(LANGUAGE_CONFIGS)) {
+            const { missing, extra } = compare(LANGUAGE_CONFIGS.en, translation);
 
             expect(
                 { missing, extra },
@@ -74,7 +70,7 @@ describe('Localization', () => {
     });
 
     test('all translation values are strings', () => {
-        for (const [name, translation] of Object.entries(translations)) {
+        for (const [name, translation] of Object.entries(LANGUAGE_CONFIGS)) {
             expect(
                 findNonStrings(translation),
                 `${name} contains non-string values`
