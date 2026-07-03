@@ -4,8 +4,7 @@
  * https://github.com/kieler/RailBlocks
  *
  * Copyright 2026 by
- *  + Tokessa Hamann and 
- *  + Kiel University
+ *  + Kiel University and others
  *    + Department of Computer Science
  *      + Real-Time and Embedded Systems Group
  *
