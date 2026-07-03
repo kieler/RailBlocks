@@ -71,7 +71,7 @@ export const de_tokens = {
 
   RAILBLOCKS_POINT_TEXT_START: 'Setze die Weiche',
   RAILBLOCKS_POINT_TEXT_END: 'auf',
-  RAILBLOCKS_POINT_TOOLTIP: 'Setze alle ausgewählten Weichen auf entweder abbiegen oder geradeaus.\n' + 'Klicke auf das Plus / Minus Symbol, um die Anzahl der Weichen zu steuern.',
+  RAILBLOCKS_POINT_TOOLTIP: 'Setze alle ausgewählten Weichen auf abbiegen oder geradeaus.\n' + 'Klicke auf das Plus / Minus Symbol, um die Anzahl der Weichen zu steuern.',
   RAILBLOCKS_POINT_STRAIGHT: 'geradeaus',
   RAILBLOCKS_POINT_BRANCH: 'abbiegen',
 

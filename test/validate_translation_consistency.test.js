@@ -2,8 +2,9 @@ import { describe, test, expect } from 'vitest';
 
 import { en_locale } from '../locales/en/en_locale.js';
 import { de_locale } from '../locales/de/de_locale.js';
+import { zh_locale } from '../locales/zh/zh_locale.js';
 
-const translations = { en_locale, de_locale };
+const translations = { en_locale, de_locale, zh_locale };
 
 function compare(reference, translation, path = '') {
     const missing = [];

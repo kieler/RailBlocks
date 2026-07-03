@@ -19,6 +19,7 @@
 import * as Blockly from 'blockly/core'
 import { en_locale } from '../locales/en/en_locale'
 import { de_locale } from '../locales/de/de_locale'
+import { zh_locale } from '../locales/zh/zh_locale'
 
 
 const LANGUAGE_STORAGE_KEY = 'railblocks.language'
@@ -26,7 +27,8 @@ const LANGUAGE_STORAGE_KEY = 'railblocks.language'
 // This file contains constants related to localization, such as retrieving the correct labels for the current language and applying the selected language to the Blockly editor and the page.
 const LANGUAGE_CONFIGS = {
   en: en_locale,
-  de: de_locale
+  de: de_locale,
+  zh: zh_locale
 }
 
 /**
