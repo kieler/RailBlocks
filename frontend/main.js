@@ -76,6 +76,7 @@ function applyHtmlLabels (languageId) {
   document.getElementById('editorLanguage').textContent = labels.languageMenuLabel
   document.getElementById('language_de_label').textContent = getLabel('de')
   document.getElementById('language_en_label').textContent = getLabel('en')
+  document.getElementById('language_zh_label').textContent = getLabel('zh')
   document.getElementById('fileLoadLabel').title = labels.loadTitle
   document.getElementById("generatedCodeTitle").textContent = labels.generatedCodeTitle
   document.getElementById("logsTitle").textContent = labels.logsTitle

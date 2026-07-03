@@ -32,7 +32,7 @@ export const zh_locale = {
     generatedCodeTitle: '生成的 RailSL',
     logsTitle: '日志',
     deployConfirm: '确定要部署到铁路吗？',
-    saveTitle: '保存将当前工作区',
+    saveTitle: '保存当前工作区',
     loadTitle: '加载工作区',
     attributionsTitle: '鸣谢',
     attributionsText:
