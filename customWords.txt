@@ -10,3 +10,4 @@ railsl
 ebnf
 editorsprache
 setzanweisungen
+zelos

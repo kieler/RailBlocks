@@ -18,6 +18,7 @@
 
 
 import * as Blockly from 'blockly/core'
+import 'blockly/javascript'
 import { segNameMap } from './consts'
 
 // Enum internally used by Blockly.
@@ -132,18 +133,42 @@ generator.forBlock.TrackStatementALT = (block, gen) => {
   return NEXT_COMMAND ? COMMAND + '\n' + gen.blockToCode(NEXT_COMMAND) : COMMAND
 }
 
+// return a list of numbers from start to end inclusive
+generator.forBlock.int_range = (block) => {
+  const start = parseInt(block.getFieldValue('START')) || 0
+  const end = parseInt(block.getFieldValue('END')) || 0
+  
+  const numbers = []
+  if (start > end) {
+    for (let i = start; i >= end; i--) {
+    numbers.push(i)
+  }
+  } else {
+    for (let i = start; i <= end; i++) {
+      numbers.push(i)
+    }
+  }
+  
+  return [numbers.join(', '), Order.ATOMIC]
+}
+
+// return an integer number
+generator.forBlock.int_number = (block) => {
+  return [block.getFieldValue('NUM') || '0', Order.ATOMIC]
+}
+
 generator.forBlock.PointStatement = (block, gen) => {
   let COMMAND = 'Set point '
 
   const tracks = []
   for (let i = 0; i < block.inputCount; i++) {
-    tracks.push(block.getFieldValue('NUMBER' + i))
+    tracks.push(gen.valueToCode(block, 'NUMBER_INPUT_' + i, Order.ATOMIC))
   }
 
   // Same thing as before.
   const BRANCH_OPTION = ['straight', 'branch'][block.getFieldValue('BRANCH_OPTION')[4] - 1]
 
-  COMMAND += tracks.toString() + ' to ' + BRANCH_OPTION + '.'
+  COMMAND += tracks.join(', ') + ' to ' + BRANCH_OPTION + '.'
 
   const NEXT_COMMAND = block.getNextBlock()
   return NEXT_COMMAND ? COMMAND + '\n' + gen.blockToCode(NEXT_COMMAND) : COMMAND
@@ -154,23 +179,39 @@ generator.forBlock.LightStatement = (block, gen) => {
 
   const tracks = []
   for (let i = 0; i < block.inputCount; i++) {
-    tracks.push(block.getFieldValue('NUMBER' + i))
+    tracks.push(gen.valueToCode(block, 'NUMBER_INPUT_' + i, Order.ATOMIC))
   }
 
   // Same thing as before.
   const LIGHT_STATUS = ['on', 'off'][block.getFieldValue('LIGHT_STATUS')[4] - 1]
 
-  COMMAND += tracks.toString() + ' ' + LIGHT_STATUS + '.'
+  COMMAND += tracks.join(', ') + ' ' + LIGHT_STATUS + '.'
 
   const NEXT_COMMAND = block.getNextBlock()
   return NEXT_COMMAND ? COMMAND + '\n' + gen.blockToCode(NEXT_COMMAND) : COMMAND
 }
 
+// return either reached or Reach depending on the block because of railsl
+generator.forBlock.reached = (block) => {
+  if (block.parentBlock_ && block.parentBlock_.type === "ConditionalStatementD") {
+    return ['reached', Order.ATOMIC]
+  }
+  return ['Reach', Order.ATOMIC]
+}
+
+// return either passed or Pass depending on the block because of railsl
+generator.forBlock.passed = (block) => {
+  if (block.parentBlock_ && block.parentBlock_.type === "ConditionalStatementD") {
+    return ['passed', Order.ATOMIC]
+  }
+  return ['Pass', Order.ATOMIC]
+}
+
 generator.forBlock.ContactWaitStatement = (block, gen) => {
   const NUMBER = ['first', 'second'][block.getFieldValue('NUMBER')[4] - 1]
-  const CONTACT = ['Reach', 'Pass'][block.getFieldValue('CONTACT')[4] - 1]
+  const TRACK_SENSOR_VALUE = gen.valueToCode(block, 'track_sensor_value', Order.ATOMIC)
   const SEGMENT = segNameMap.get(block.getFieldValue('SEGMENT'))
-  const COMMAND = CONTACT + ' ' + NUMBER + ' contact of ' + SEGMENT + '.'
+  const COMMAND = TRACK_SENSOR_VALUE + ' ' + NUMBER + ' contact of ' + SEGMENT + '.'
 
   const NEXT_COMMAND = block.getNextBlock()
   return NEXT_COMMAND ? COMMAND + '\n' + gen.blockToCode(NEXT_COMMAND) : COMMAND
@@ -240,13 +281,16 @@ generator.forBlock.ConditionalStatementD = (block, gen) => {
     const COND_BLOCK = gen.statementToCode(block, 'COND_BLOCK' + i)
     const CONTACT = ['first', 'second'][block.getFieldValue('CONTACT' + i)[4] - 1]
     const SEGMENT = segNameMap.get(block.getFieldValue('SEGMENT' + i))
+    const TRACK_SENSOR_VALUE = gen.valueToCode(block, 'COND_BOOL' + i, Order.ATOMIC)
 
     COMMAND +=
         'If ' +
         CONTACT +
         ' contact of ' +
         SEGMENT +
-        ' is reached first, do\n' +
+        ' is ' +
+        TRACK_SENSOR_VALUE +
+        ' first, do\n' +
         'Start:\n' +
         COND_BLOCK +
         '\nEnd.\n'
@@ -263,6 +307,7 @@ generator.forBlock.ConditionalStatement = (block, gen) => {
   const CONTACT1 = ['first', 'second'][block.getFieldValue('CONTACT1')[4] - 1]
   const SEGMENT0 = segNameMap.get(block.getFieldValue('SEGMENT0'))
   const SEGMENT1 = segNameMap.get(block.getFieldValue('SEGMENT1'))
+  const TRACK_SENSOR_VALUE = gen.valueToCode(block, 'track_sensor_value', Order.ATOMIC)
 
   const COND_BLOCK0 = gen.statementToCode(block, 'COND_BLOCK0')
   const COND_BLOCK1 = gen.statementToCode(block, 'COND_BLOCK1')
@@ -274,7 +319,9 @@ generator.forBlock.ConditionalStatement = (block, gen) => {
         CONTACT0 +
         ' contact of ' +
         SEGMENT0 +
-        ' is reached first, do\n' +
+        ' is ' +
+        TRACK_SENSOR_VALUE +
+        ' first, do\n' +
         'Start:\n' +
         COND_BLOCK0 +
         '\nEnd.\n' +
