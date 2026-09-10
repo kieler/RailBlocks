@@ -20,6 +20,7 @@
 
 import * as Blockly from 'blockly/core'
 import { BlockSvg } from 'blockly/core'
+import { ensureShadow } from './dynamic_blocks'
 
 /**
  * Class for field that adds a Plus and Minus button that increment/decrement
@@ -192,6 +193,7 @@ export class FieldPlusMinus extends Blockly.Field {
   increase_count () {
     this.sourceBlock_.inputCount++
     this.sourceBlock_.updateShape()
+    ensureShadow(this.sourceBlock_, 'NUMBER_INPUT_' + (this.sourceBlock_.inputCount - 1))
   }
 
   /**

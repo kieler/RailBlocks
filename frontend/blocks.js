@@ -89,7 +89,7 @@ const blockDefinitionsJson = [
       }
     ],
     output: 'CSetVector',
-    colour: 25,
+    colour: 0,
     tooltip: '%{BKY_RAILBLOCKS_STOP_TOOLTIP}'
   },
   // Track-Statement Vector Direction case.
@@ -114,7 +114,7 @@ const blockDefinitionsJson = [
     ],
     output: 'CSetVector',
     tooltip: '%{BKY_RAILBLOCKS_DIR_TOOLTIP}',
-    colour: 25
+    colour: 0
   },
   // Contact-Wait-Statement
   // Wait until a segment switch is reached or passed.
@@ -123,13 +123,10 @@ const blockDefinitionsJson = [
     message0: '%{BKY_RAILBLOCKS_CONTACT_WAIT_TEXT}',
     args0: [
       {
-        type: 'field_dropdown',
-        options: [
-          ['%{BKY_RAILBLOCKS_CONTACT_WAIT_REACHED}', 'ITEM1'],
-          ['%{BKY_RAILBLOCKS_CONTACT_WAIT_PASSED}', 'ITEM2']
-        ],
-        name: 'CONTACT'
-      },
+      type: "input_value",
+      name: "track_sensor_value",
+      check: "Boolean"
+    },
       {
         type: 'field_dropdown',
         options: [
@@ -144,7 +141,7 @@ const blockDefinitionsJson = [
         name: 'SEGMENT'
       }
     ],
-    colour: 240,
+    colour: 210,
     tooltip: '%{BKY_RAILBLOCKS_CONTACT_WAIT_TOOLTIP}',
     previousStatement: 'CStatement',
     nextStatement: 'CStatement'
@@ -161,7 +158,7 @@ const blockDefinitionsJson = [
         name: 'DURATION'
       }
     ],
-    colour: 240,
+    colour: 210,
     tooltip: '%{BKY_RAILBLOCKS_TIME_WAIT_TOOLTIP}',
     previousStatement: 'CStatement',
     nextStatement: 'CStatement'
@@ -181,7 +178,7 @@ const blockDefinitionsJson = [
         name: 'CROSSING_STATUS'
       }
     ],
-    colour: 280,
+    colour: 60,
     tooltip: '%{BKY_RAILBLOCKS_CROSSING_TOOLTIP}',
     previousStatement: 'CStatement',
     nextStatement: 'CStatement'
@@ -212,6 +209,11 @@ const blockDefinitionsJson = [
         name: 'COND_BLOCK0'
       },
       {
+      type: "input_value",
+      name: "track_sensor_value",
+      check: "Boolean"
+    },
+      {
         type: 'field_dropdown',
         options: [
           ['%{BKY_RAILBLOCKS_CONDITIONAL_FIRST}', 'ITEM1'],
@@ -228,7 +230,12 @@ const blockDefinitionsJson = [
         type: 'input_statement',
         check: 'CStatement',
         name: 'COND_BLOCK1'
-      }
+      },
+      {
+      type: "input_value",
+      name: "track_sensor_value",
+      check: "Boolean"
+    }
     ],
     colour: 300,
     tooltip: '%{BKY_RAILBLOCKS_CONDITIONAL_TOOLTIP}',
@@ -256,6 +263,65 @@ const blockDefinitionsJson = [
     tooltip: '%{BKY_RAILBLOCKS_PARALLEL_TOOLTIP}',
     previousStatement: 'CStatement',
     nextStatement: 'CStatement'
+  },
+  // Reached track sensor value
+  // Shows that we reached the track sensor.
+  {
+    type: "reached",
+    message0: "%{BKY_RAILBLOCKS_CONTACT_WAIT_REACHED}",
+    output: "Boolean",
+    colour: 155,
+    tooltip: "Returns true if reached"
+  },
+  // Passed track sensor value
+  // Shows that we passed the track sensor.
+  {
+    type: "passed",
+    message0: "%{BKY_RAILBLOCKS_CONTACT_WAIT_PASSED}",
+    output: "Boolean",
+    colour: 155,
+    tooltip: "Returns true if passed"
+  },
+  // Integer range
+  // Is a range of integer numbers from start to end inclusive
+  {
+  type: "int_range",
+  message0: "%{BKY_RAILBLOCKS_INT_RANGE_TEXT}",
+  args0: [
+    {
+      type: "field_number",
+      name: "START",
+      value: 0,
+      min: 0,
+      precision: 1
+    },
+    {
+      type: "field_number",
+      name: "END",
+      value: 2
+    }
+  ],
+  output: "int_range",
+  extensions: ["dynamic_int_range_validator"],
+  colour: 80,
+  tooltip: "%{BKY_RAILBLOCKS_INT_RANGE_TOOLTIP}"
+  },
+  // Integer
+  // Is just a simple number for shadow fields
+  {
+    type: "int_number",
+    message0: "%1",
+    args0: [
+      {
+        type: "field_number",
+        name: "NUM",
+        value: 1,
+        min: 0,
+        precision: 1
+      }
+    ],
+    output: "Number",
+    extensions: ["dynamic_int_number_validator"]
   }
 ]
 
@@ -287,11 +353,11 @@ function createToolbox (labels) {
       },
       {
         kind: 'block',
-        type: 'CrossingStatement'
+        type: 'LightStatement',
       },
       {
         kind: 'block',
-        type: 'LightStatement'
+        type: 'CrossingStatement'
       },
       {
         kind: 'sep',
@@ -328,7 +394,31 @@ function createToolbox (labels) {
       {
         kind: 'block',
         type: 'LoopStatement'
-      }
+      },
+      {
+        kind: 'sep',
+        gap: 60
+      },
+      {
+        kind: 'label',
+        text: labels.sensorValues
+      },
+      {
+        kind: 'block',
+        type: 'reached'
+      },
+      {
+        kind: 'block',
+        type: 'passed'
+      },
+      {
+        kind: 'label',
+        text: labels.numbers
+      },
+      {
+        kind: 'block',
+        type: 'int_range'
+      },
     ]
   }
 }

@@ -39,6 +39,9 @@ export const en_tokens = {
   RAILBLOCKS_CONTACT_WAIT_FIRST: 'first',
   RAILBLOCKS_CONTACT_WAIT_SECOND: 'second',
 
+  RAILBLOCKS_INT_RANGE_TEXT: '%1 to %2',
+  RAILBLOCKS_INT_RANGE_TOOLTIP: 'Creates a range of numbers.',
+
   RAILBLOCKS_TIME_WAIT_TEXT: 'Wait for %1 second(s)',
   RAILBLOCKS_TIME_WAIT_TOOLTIP: 'Do nothing for a certain amount of time.',
 
@@ -47,13 +50,14 @@ export const en_tokens = {
   RAILBLOCKS_CROSSING_OPEN: 'Open',
   RAILBLOCKS_CROSSING_CLOSE: 'Close',
 
-  RAILBLOCKS_CONDITIONAL_TEXT: 'If %1 contact of %2 is reached first\n%3else if %4 contact of %5 is reached first',
+  RAILBLOCKS_CONDITIONAL_TEXT: 'If %1 contact of %2 is %3 first\n else if %4 contact of %5 is %6 first',
   RAILBLOCKS_CONDITIONAL_TOOLTIP: 'Execute different blocks depending on which track is reached first by a train.',
   RAILBLOCKS_CONDITIONAL_FIRST: 'first',
   RAILBLOCKS_CONDITIONAL_SECOND: 'second',
   RAILBLOCKS_CONDITIONAL_TEXT_START: 'If',
   RAILBLOCKS_CONDITIONAL_TEXT_MIDDLE: 'contact of',
-  RAILBLOCKS_CONDITIONAL_TEXT_END: 'is reached first',
+  RAILBLOCKS_CONDITIONAL_TEXT_END_1: 'is',
+  RAILBLOCKS_CONDITIONAL_TEXT_END_2: 'first',
   RAILBLOCKS_CONDITIONAL_TITLE_TEXT: 'Branch',
 
   RAILBLOCKS_PARALLEL_TEXT: 'Parallel',
@@ -81,4 +85,5 @@ export const en_tokens = {
   RAILBLOCKS_WARNING_UNREACHABLE_WEAK: 'Blocks after this may not be reached because of a loop inside this.',
   RAILBLOCKS_WARNING_EMPTY_INPUT: 'This block has empty inputs and will cause a syntax error!',
   RAILBLOCKS_WARNING_UNUSED: 'Unused block',
+  RAILBLOCKS_WARNING_PASSED: 'The "passed" block can currently not be used in this block.',
 }

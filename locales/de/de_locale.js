@@ -40,6 +40,8 @@ export const de_locale = {
     toolboxLabels: {
       setStatements: 'Setzanweisungen',
       waitStatements: 'Warteanweisungen',
-      controlFlow: 'Kontrollfluss'
+      controlFlow: 'Kontrollfluss',
+      sensorValues: 'Gleissensorwerte',
+      numbers: 'Nummern',
     }
 };

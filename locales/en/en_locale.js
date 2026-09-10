@@ -40,6 +40,8 @@ export const en_locale = {
     toolboxLabels: {
       setStatements: 'Set Statements',
       waitStatements: 'Wait Statements',
-      controlFlow: 'Control Flow'
+      controlFlow: 'Control Flow',
+      sensorValues: 'Track Sensor Values',
+      numbers: 'Numbers',
     }
 };
