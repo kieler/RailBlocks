@@ -315,7 +315,7 @@ const blockDefinitionsJson = [
       {
         type: "field_number",
         name: "NUM",
-        value: 1,
+        value: 0,
         min: 0,
         precision: 1
       }

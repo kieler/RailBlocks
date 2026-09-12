@@ -270,6 +270,7 @@ Blockly.Blocks.PointStatement = {
       while (currentCount < this.inputCount) {
         const input = this.appendValueInput('NUMBER_INPUT_' + currentCount)
           .setCheck(['Number', 'int_range'])
+          .setAlign(Blockly.inputs.Align.CENTRE);
 
         if (currentCount !== 0) {
           input.appendField(',')
