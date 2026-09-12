@@ -86,4 +86,5 @@ export const en_tokens = {
   RAILBLOCKS_WARNING_EMPTY_INPUT: 'This block has empty inputs and will cause a syntax error!',
   RAILBLOCKS_WARNING_UNUSED: 'Unused block',
   RAILBLOCKS_WARNING_PASSED: 'The "passed" block can currently not be used in this block.',
+  RAILBLOCKS_WARNING_UNSELECTED: 'No track is currently selected.',
 }

@@ -86,4 +86,5 @@ export const de_tokens = {
   RAILBLOCKS_WARNING_EMPTY_INPUT: 'Dieser Block hat leere Felder und wird einen Syntaxfehler verursachen!',
   RAILBLOCKS_WARNING_UNUSED: 'Unbenutzter Block',
   RAILBLOCKS_WARNING_PASSED: 'Der "passiert" Block kann momentan nicht in diesem Block genutzt werden.',
+  RAILBLOCKS_WARNING_UNSELECTED: 'Es wurde kein Gleis ausgewählt.',
 }

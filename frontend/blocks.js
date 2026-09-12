@@ -75,7 +75,7 @@ const blockDefinitionsJson = [
     previousStatement: 'CStatement',
     nextStatement: 'CStatement',
     tooltip: '%{BKY_RAILBLOCKS_TRACK_TOOLTIP}',
-    colour: 25
+    colour: 0
   },
   // Track-Statement Vector Null-vector case.
   // EBNF: stop
