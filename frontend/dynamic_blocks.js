@@ -18,7 +18,7 @@
 */
 
 import * as Blockly from 'blockly/core'
-import { segName, mutationToDom, domToMutation, validatorSegment } from './consts.js'
+import { segName, mutationToDom, domToMutation } from './consts.js'
 import { FieldPlusMinus } from './fields.js'
 
 // DYNAMIC (MUTABLE) BLOCKS
@@ -171,66 +171,6 @@ Blockly.Blocks.ConditionalStatementD = {
   }
 }
 
-// Almost the same but with text input fields and not dropdown fields.
-Blockly.Blocks.TrackStatementALT = {
-  init: function () {
-    this.appendValueInput('SET_TRACK')
-      .appendField(new FieldPlusMinus(), 'PM_FIELD')
-      .setCheck('CSetVector')
-      .appendField(Blockly.Msg.RAILBLOCKS_TRACK_TEXT_START, 'SET_TRACK_FIELD')
-    this.setPreviousStatement('CStatement')
-    this.setNextStatement('CStatement')
-    this.setInputsInline(false)
-    this.setColour(0)
-    this.setTooltip(Blockly.Msg.RAILBLOCKS_TRACK_TOOLTIP)
-
-    this.inputCount = 1
-    this.updateShape()
-  },
-
-  mutationToDom,
-
-  domToMutation,
-
-  updateShape: function () {
-    const values = []
-    for (let i = 0; i < this.inputCount; i++) {
-      values.push(
-        this.getField('TEXT' + i)
-          ? this.getField('TEXT' + i).getValue()
-          : ''
-      )
-    }
-
-    const valueInput = this.getInput('SET_TRACK')
-    const toRemove = []
-
-    for (let i = 0; i < valueInput.fieldRow.length; i++) {
-      const name = valueInput.fieldRow[i].name
-      if (!name || name[0] === 'T') { toRemove.push(name) }
-    }
-    for (let i = 0; i < toRemove.length; i++) {
-      valueInput.removeField(toRemove[i])
-    }
-
-    for (let i = 0; i < this.inputCount; i++) {
-      if (i === 0) {
-        valueInput.appendField(new Blockly.FieldTextInput(
-          'KH_ST_0', validatorSegment
-        ), 'TEXT' + i)
-      } else {
-        valueInput.appendField(',')
-          .appendField(new Blockly.FieldTextInput(
-            'KH_ST_0', validatorSegment
-          ), 'TEXT' + i)
-      }
-      this.setFieldValue(values[i], 'TEXT' + i)
-    }
-
-    valueInput.appendField(Blockly.Msg.RAILBLOCKS_TRACK_TEXT_END)
-  }
-}
-
 Blockly.Blocks.PointStatement = {
   init: function () {
     this.appendDummyInput('SET_POINT')
@@ -270,7 +210,6 @@ Blockly.Blocks.PointStatement = {
       while (currentCount < this.inputCount) {
         const input = this.appendValueInput('NUMBER_INPUT_' + currentCount)
           .setCheck(['Number', 'int_range'])
-          .setAlign(Blockly.inputs.Align.CENTRE);
 
         if (currentCount !== 0) {
           input.appendField(',')
