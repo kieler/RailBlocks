@@ -102,15 +102,12 @@ generator.forBlock.TrackStatement = (block, gen) => {
   // Append more later.
   let COMMAND = 'Set track '
 
-  // Get all track names and append to tracks.
-  const tracks = []
-  for (let i = 0; i < block.inputCount; i++) {
-    tracks.push(segNameMap.get(block.getFieldValue('DROPDOWN' + i)))
-  }
+  // Get all track names
+  const multi_select = block.getFieldValue('MULTI_FIELD')
 
   // Append all track names and resolve the input,
   // which is either TrackStatementVectorStop or TrackStatementVectorDir.
-  COMMAND += tracks.toString() + ' to ' + gen.valueToCode(block, 'SET_TRACK', Order.ATOMIC)
+  COMMAND += multi_select.toString() + ' to ' + gen.valueToCode(block, 'SET_TRACK', Order.ATOMIC)
 
   // These two lines are basically the same for all statements.
   // We have to include the code of the next block manually, since blocks are stored as trees

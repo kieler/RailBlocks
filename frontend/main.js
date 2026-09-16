@@ -255,6 +255,28 @@ function markPassedConditionalStatement (workspace) {
 }
 
 /**
+ * Warns the user by indicating all TrackStatements blocks that have no track selected.
+ * @param {Blockly.WorkspaceSvg} workspace The workspace to scan.
+ */
+function markUnselectedTrack (workspace) {
+  workspace.getAllBlocks().forEach(block => {
+    if (block.type !== 'TrackStatement') return
+
+    const selected = block.getFieldValue('MULTI_FIELD') 
+    // is a track selected?
+    const isNone = !selected || selected.length === 0
+
+    if (!block.unselected && isNone) {
+      addBlockWarning(block, 'unselected', Blockly.Msg.RAILBLOCKS_WARNING_UNSELECTED)
+      block.unselected = true
+    } else if (block.unselected && !isNone) {
+      removeBlockWarning(block, 'unselected')
+      block.unselected = false
+    }
+  })
+}
+
+/**
  * Helper function that checks if a block with input statements contains or is a loop statement.
  * @param {Blockly.Block} block Block to be searched in.
  * @returns {boolean} True if block contains or is loop statement.
@@ -345,7 +367,10 @@ workspace.addChangeListener((event) => {
     // Mark ConditionalStatementD blocks that have a "passed" block in themself 
     markPassedConditionalStatement(workspace)
   }
-  
+  if (event.type === Blockly.Events.BLOCK_CHANGE || event.type === Blockly.Events.BLOCK_CREATE) {
+    // Mark TrackStatement with no selected track
+    markUnselectedTrack(workspace)
+  }
 
   // Mark blocks that have unconnected connections.
   markUnconnectedBlocks(workspace)

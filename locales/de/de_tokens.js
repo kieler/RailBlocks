@@ -69,9 +69,9 @@ export const de_tokens = {
   RAILBLOCKS_LIGHTS_ON: 'an',
   RAILBLOCKS_LIGHTS_OFF: 'aus',
 
-  RAILBLOCKS_TRACK_TEXT_START: 'Setze das Gleis',
-  RAILBLOCKS_TRACK_TEXT_END: 'auf',
-  RAILBLOCKS_TRACK_TOOLTIP: 'Setze alle ausgewählten Gleise auf eine bestimmte Geschwindigkeit und Richtung.\n' + 'Klicke auf das Plus / Minus Symbol, um die Anzahl der Gleisen zu steuern.',
+  RAILBLOCKS_TRACK_TEXT: 'Setze das Gleis %1 auf %2',
+  RAILBLOCKS_TRACK_NONE: '(leer)',
+  RAILBLOCKS_TRACK_TOOLTIP: 'Setze alle ausgewählten Gleise auf eine bestimmte Geschwindigkeit und Richtung.\n',
 
   RAILBLOCKS_POINT_TEXT_START: 'Setze die Weiche',
   RAILBLOCKS_POINT_TEXT_END: 'auf',
@@ -84,4 +84,5 @@ export const de_tokens = {
   RAILBLOCKS_WARNING_EMPTY_INPUT: 'Dieser Block hat leere Felder und wird einen Syntaxfehler verursachen!',
   RAILBLOCKS_WARNING_UNUSED: 'Unbenutzter Block',
   RAILBLOCKS_WARNING_PASSED: 'Der "passiert" Block kann momentan nicht in diesem Block genutzt werden.',
+  RAILBLOCKS_WARNING_UNSELECTED: 'Es wurde kein Gleis ausgewählt.',
 }

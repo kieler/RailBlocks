@@ -54,6 +54,29 @@ const blockDefinitionsJson = [
     colour: 260,
     tooltip: '%{BKY_RAILBLOCKS_LOOP_TOOLTIP}'
   },
+  // Track-Statement 
+  // Select which track should change
+  {
+    type: 'TrackStatement',
+    message0: '%{BKY_RAILBLOCKS_TRACK_TEXT}',
+    args0: [
+      {
+        type: 'field_multiselectdropdown',
+        name: 'MULTI_FIELD',
+        options: segName,
+        value: []
+      },
+      {
+        type: 'input_value',
+        name: 'SET_TRACK',
+        check: 'CSetVector'
+      }
+    ],
+    previousStatement: 'CStatement',
+    nextStatement: 'CStatement',
+    tooltip: '%{BKY_RAILBLOCKS_TRACK_TOOLTIP}',
+    colour: 0
+  },
   // Track-Statement Vector Null-vector case.
   // EBNF: stop
   {
@@ -292,7 +315,7 @@ const blockDefinitionsJson = [
       {
         type: "field_number",
         name: "NUM",
-        value: 1,
+        value: 0,
         min: 0,
         precision: 1
       }

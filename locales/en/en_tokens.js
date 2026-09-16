@@ -69,9 +69,9 @@ export const en_tokens = {
   RAILBLOCKS_LIGHTS_ON: 'on',
   RAILBLOCKS_LIGHTS_OFF: 'off',
 
-  RAILBLOCKS_TRACK_TEXT_START: 'Set track',
-  RAILBLOCKS_TRACK_TEXT_END: 'to',
-  RAILBLOCKS_TRACK_TOOLTIP: 'Sets a number of tracks to some velocity and direction.\n' + 'Click the plus/minus symbol to control the number of tracks.',
+  RAILBLOCKS_TRACK_TEXT: 'Set track %1 to %2',
+  RAILBLOCKS_TRACK_NONE: '(none)',
+  RAILBLOCKS_TRACK_TOOLTIP: 'Sets a number of tracks to some velocity and direction.\n',
 
   RAILBLOCKS_POINT_TEXT_START: 'Set point',
   RAILBLOCKS_POINT_TEXT_END: 'to',
@@ -84,4 +84,5 @@ export const en_tokens = {
   RAILBLOCKS_WARNING_EMPTY_INPUT: 'This block has empty inputs and will cause a syntax error!',
   RAILBLOCKS_WARNING_UNUSED: 'Unused block',
   RAILBLOCKS_WARNING_PASSED: 'The "passed" block can currently not be used in this block.',
+  RAILBLOCKS_WARNING_UNSELECTED: 'No track is currently selected.',
 }
