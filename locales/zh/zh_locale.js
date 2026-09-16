@@ -42,7 +42,7 @@ export const zh_locale = {
     setStatements: '设置语句',
     waitStatements: '等待语句',
     controlFlow: '控制流程',
-    sensorValues: 'Gleissensorwerte',
-    numbers: 'Nummern',
+    sensorValues: '轨道传感器值',
+    numbers: '数字',
   }
 }
