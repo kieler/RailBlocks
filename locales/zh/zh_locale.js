@@ -41,6 +41,8 @@ export const zh_locale = {
   toolboxLabels: {
     setStatements: '设置语句',
     waitStatements: '等待语句',
-    controlFlow: '控制流程'
+    controlFlow: '控制流程',
+    sensorValues: 'Gleissensorwerte',
+    numbers: 'Nummern',
   }
 }

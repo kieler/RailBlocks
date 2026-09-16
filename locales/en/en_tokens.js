@@ -35,7 +35,9 @@ export const en_tokens = {
   RAILBLOCKS_CONTACT_WAIT_TEXT: 'Wait until %2 contact of %3 is %1',
   RAILBLOCKS_CONTACT_WAIT_TOOLTIP: 'Do nothing until a train interacts with a track.',
   RAILBLOCKS_CONTACT_WAIT_REACHED: 'reached',
+  RAILBLOCKS_CONTACT_WAIT_REACHED_TOOLTIP: 'Returns true if reached',
   RAILBLOCKS_CONTACT_WAIT_PASSED: 'passed',
+  RAILBLOCKS_CONTACT_WAIT_PASSED_TOOLTIP: 'Returns true if passed',
   RAILBLOCKS_CONTACT_WAIT_FIRST: 'first',
   RAILBLOCKS_CONTACT_WAIT_SECOND: 'second',
 
