@@ -84,7 +84,7 @@ export const zh_tokens = {
   RAILBLOCKS_LIGHTS_OFF: '关闭',
 
   RAILBLOCKS_TRACK_TEXT: '将轨道 %1 设为 %2',
-  RAILBLOCKS_TRACK_NONE: '(leer)',
+  RAILBLOCKS_TRACK_NONE: '(空)',
   RAILBLOCKS_TRACK_TOOLTIP:
     '设置一个或多个轨道的速度和方向。',
 
