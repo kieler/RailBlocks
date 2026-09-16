@@ -271,7 +271,7 @@ const blockDefinitionsJson = [
     message0: "%{BKY_RAILBLOCKS_CONTACT_WAIT_REACHED}",
     output: "Boolean",
     colour: 155,
-    tooltip: "Returns true if reached"
+    tooltip: "%{BKY_RAILBLOCKS_CONTACT_WAIT_REACHED_TOOLTIP}"
   },
   // Passed track sensor value
   // Shows that we passed the track sensor.
@@ -280,7 +280,7 @@ const blockDefinitionsJson = [
     message0: "%{BKY_RAILBLOCKS_CONTACT_WAIT_PASSED}",
     output: "Boolean",
     colour: 155,
-    tooltip: "Returns true if passed"
+    tooltip: "%{BKY_RAILBLOCKS_CONTACT_WAIT_PASSED_TOOLTIP}"
   },
   // Integer range
   // Is a range of integer numbers from start to end inclusive
