@@ -35,7 +35,9 @@ export const en_tokens = {
   RAILBLOCKS_CONTACT_WAIT_TEXT: 'Wait until %2 contact of %3 is %1',
   RAILBLOCKS_CONTACT_WAIT_TOOLTIP: 'Do nothing until a train interacts with a track.',
   RAILBLOCKS_CONTACT_WAIT_REACHED: 'reached',
+  RAILBLOCKS_CONTACT_WAIT_REACHED_TOOLTIP: 'Returns true if reached',
   RAILBLOCKS_CONTACT_WAIT_PASSED: 'passed',
+  RAILBLOCKS_CONTACT_WAIT_PASSED_TOOLTIP: 'Returns true if passed',
   RAILBLOCKS_CONTACT_WAIT_FIRST: 'first',
   RAILBLOCKS_CONTACT_WAIT_SECOND: 'second',
 
@@ -75,12 +77,12 @@ export const en_tokens = {
 
   RAILBLOCKS_POINT_TEXT_START: 'Set point',
   RAILBLOCKS_POINT_TEXT_END: 'to',
-  RAILBLOCKS_POINT_TOOLTIP: 'Sets a number of points to either branch or be straight.\n' + 'Click the plus/minus symbol to control the number of points.',
+  RAILBLOCKS_POINT_TOOLTIP: 'Sets a number of points to either branch or straight.\n' + 'Click the plus/minus symbol to control the number of points.',
   RAILBLOCKS_POINT_STRAIGHT: 'straight',
   RAILBLOCKS_POINT_BRANCH: 'branch',
 
-  RAILBLOCKS_WARNING_UNREACHABLE_STRONG: 'Blocks after this will not be reached because of a loop inside this.',
-  RAILBLOCKS_WARNING_UNREACHABLE_WEAK: 'Blocks after this may not be reached because of a loop inside this.',
+  RAILBLOCKS_WARNING_UNREACHABLE_STRONG: 'Blocks after this will not be reached because of a loop inside this block.',
+  RAILBLOCKS_WARNING_UNREACHABLE_WEAK: 'Blocks after this may not be reached because of a loop inside this block.',
   RAILBLOCKS_WARNING_EMPTY_INPUT: 'This block has empty inputs and will cause a syntax error!',
   RAILBLOCKS_WARNING_UNUSED: 'Unused block',
   RAILBLOCKS_WARNING_PASSED: 'The "passed" block can currently not be used in this block.',

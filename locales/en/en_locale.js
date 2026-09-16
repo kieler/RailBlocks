@@ -32,8 +32,8 @@ export const en_locale = {
       generatedCodeTitle: 'Generated RailSL',
       logsTitle: 'Logs',
       deployConfirm: 'Really deploy on the railway?',
-      saveTitle: 'Save current workspace to disk',
-      loadTitle: 'Load workspace from disk',
+      saveTitle: 'Save current workspace',
+      loadTitle: 'Load workspace',
       attributionsTitle: 'Attributions',
       attributionsText: 'Images created and distributed by user jucy_fish (train icon), Freepik (hourglass gif), <a href="https://www.flaticon.com/" title="icons source 1">Flaticon</a> and <a href="https://www.svgrepo.com" title="icons source 2">svgrepo</a>.'
     },

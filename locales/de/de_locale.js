@@ -32,8 +32,8 @@ export const de_locale = {
       generatedCodeTitle: 'Generierter RailSL',
       logsTitle: 'Protokolle',
       deployConfirm: 'Wirklich auf der Anlage ausführen?',
-      saveTitle: 'Aktuellen Arbeitsbereich auf der Festplatte speichern',
-      loadTitle: 'Arbeitsbereich von der Festplatte laden',
+      saveTitle: 'Aktuellen Arbeitsbereich speichern',
+      loadTitle: 'Arbeitsbereich laden',
       attributionsTitle: 'Danksagungen',
       attributionsText: 'Bilder erstellt und verteilt von user jucy_fish (Zugsymbol), Freepik (Sanduhr-GIF), <a href="https://www.flaticon.com/" title="icons source 1">Flaticon</a> und <a href="https://www.svgrepo.com" title="icons source 2">svgrepo</a>.'
     },
