@@ -71,7 +71,7 @@ export const de_tokens = {
 
   RAILBLOCKS_TRACK_TEXT: 'Setze das Gleis %1 auf %2',
   RAILBLOCKS_TRACK_NONE: '(leer)',
-  RAILBLOCKS_TRACK_TOOLTIP: 'Setze alle ausgewählten Gleise auf eine bestimmte Geschwindigkeit und Richtung.\n' + 'Klicke auf das Plus / Minus Symbol, um die Anzahl der Gleisen zu steuern.',
+  RAILBLOCKS_TRACK_TOOLTIP: 'Setze alle ausgewählten Gleise auf eine bestimmte Geschwindigkeit und Richtung.\n',
 
   RAILBLOCKS_POINT_TEXT_START: 'Setze die Weiche',
   RAILBLOCKS_POINT_TEXT_END: 'auf',
