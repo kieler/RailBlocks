@@ -18,7 +18,7 @@
   },
   "type": "module",
   "dependencies": {
-    "blockly": "^12.2.0",
+    "blockly": "^13.2.0",
     "concurrently": "^9.1.2",
     "cors": "^2.8.5",
     "express": "^5.1.0",

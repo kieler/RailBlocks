@@ -19,8 +19,9 @@
 
 import * as Blockly from 'blockly/core'
 
-import './renderer.js'
+import './zelos_renderer.js'
 import './dynamic_blocks.js'
+import './validators.js' 
 import { blockDefinitionsJson, createToolbox } from './blocks.js'
 import { compile } from './generator.js'
 import { getLabel, getToolBoxLabels, getHtmlLabels, getStoredLanguage, applyLanguage, LANGUAGE_STORAGE_KEY, LANGUAGE_CONFIGS } from './localization.js'
@@ -125,7 +126,7 @@ const workspace = Blockly.inject('blocklyDiv', {
   theme,
   // Load the custom renderer defined in renderer.js
   // Should not make a big difference but is advised to be loaded for extensions.
-  renderer: 'thrasos_extended',
+  renderer: 'zelos_renderer',
   move: {
     scrollbars: {
       horizontal: true,
@@ -151,6 +152,7 @@ function restoreWorkspaceState (workspace) {
     const state = JSON.parse(savedWorkspace)
     Blockly.serialization.workspaces.load(state, workspace)
     window.localStorage.removeItem(workspaceStorageKey)
+    workspace.render()
     return true
   } catch (error) {
     window.localStorage.removeItem(workspaceStorageKey)
@@ -246,13 +248,66 @@ function removeBlockWarning (block, warningKey) {
 function markUnusedBlocks (workspace) {
   // Mark all unused blocks
   workspace.getAllBlocks().forEach(block => {
+    // skip for shadow blocks; only show for parents
+    if (block.shadow) return
+    if ((block.type === 'int_range' || block.type === 'reached' || block.type === 'passed') && block.parentBlock_ !== null) {
+      removeBlockWarning(block, 'unused')
+      block.unused = false
+    }
+
     // getRootBlock() returns the topmost block in a stack.
-    if (!block.unused && block.getRootBlock().id !== 'ROOT') {
+    else if (!block.unused && block.getRootBlock().id !== 'ROOT') {
       addBlockWarning(block, 'unused', Blockly.Msg.RAILBLOCKS_WARNING_UNUSED)
       block.unused = true
     } else if (block.unused && block.getRootBlock().id === 'ROOT') {
       removeBlockWarning(block, 'unused')
       block.unused = false
+    }
+  })
+}
+
+/**
+ * Warns the user by indicating all ConditionalStatementD blocks that have a passed inside them.
+ * @param {Blockly.WorkspaceSvg} workspace The workspace to scan.
+ */
+function markPassedConditionalStatement (workspace) {
+  workspace.getAllBlocks().forEach(block => {
+    // is "passed" block in ConditionalStatementD?
+    if (block.type === 'passed' && block.parentBlock_?.type === 'ConditionalStatementD') {
+      const parent = block.parentBlock_
+      if (!parent.passed) {
+        parent.passed = true
+        addBlockWarning(parent, 'passed', Blockly.Msg.RAILBLOCKS_WARNING_PASSED)
+      }
+    } else if (block.passed) {
+      // remove passed when child block no longer exists
+      const hasPassed = block.getChildren().some(child => child.type === 'passed')
+      block.passed = hasPassed
+      if (!hasPassed) {
+        removeBlockWarning(block, 'passed')
+      }
+    }
+  })
+}
+
+/**
+ * Warns the user by indicating all TrackStatements blocks that have no track selected.
+ * @param {Blockly.WorkspaceSvg} workspace The workspace to scan.
+ */
+function markUnselectedTrack (workspace) {
+  workspace.getAllBlocks().forEach(block => {
+    if (block.type !== 'TrackStatement') return
+
+    const selected = block.getFieldValue('MULTI_FIELD') 
+    // is a track selected?
+    const isNone = !selected || selected.length === 0
+
+    if (!block.unselected && isNone) {
+      addBlockWarning(block, 'unselected', Blockly.Msg.RAILBLOCKS_WARNING_UNSELECTED)
+      block.unselected = true
+    } else if (block.unselected && !isNone) {
+      removeBlockWarning(block, 'unselected')
+      block.unselected = false
     }
   })
 }
@@ -338,11 +393,19 @@ workspace.addChangeListener((event) => {
   // Send all code to the output div.
   compile(workspace)
 
-  if (event.type === Blockly.Events.BLOCK_MOVE) {
+  if (event.type === Blockly.Events.BLOCK_MOVE || event.type === Blockly.Events.FINISHED_LOADING) {
     // Mark blocks not inside the program block.
     markUnusedBlocks(workspace)
     // Mark Branch and Parallel blocks if they contain a loop.
     markWarnings(workspace)
+  }
+  if (event.type === Blockly.Events.BLOCK_DRAG) {
+    // Mark ConditionalStatementD blocks that have a "passed" block in themself 
+    markPassedConditionalStatement(workspace)
+  }
+  if (event.type === Blockly.Events.BLOCK_CHANGE || event.type === Blockly.Events.BLOCK_CREATE) {
+    // Mark TrackStatement with no selected track
+    markUnselectedTrack(workspace)
   }
 
   // Mark blocks that have unconnected connections.
@@ -495,6 +558,7 @@ document.getElementById('file_load').addEventListener('change', (event) => {
     // (toString because type safety)
     const state = JSON.parse(fr.result.toString())
     Blockly.serialization.workspaces.load(state, workspace)
+    workspace.render()
   }
   // ... and load it.
   fr.readAsText(files[0])

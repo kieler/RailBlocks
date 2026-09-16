@@ -18,7 +18,7 @@
 */
 
 import * as Blockly from 'blockly/core'
-import { segName, mutationToDom, domToMutation, validatorSegment } from './consts.js'
+import { segName, mutationToDom, domToMutation } from './consts.js'
 import { FieldPlusMinus } from './fields.js'
 
 // DYNAMIC (MUTABLE) BLOCKS
@@ -36,7 +36,7 @@ Blockly.Blocks.ParallelStatementD = {
     this.setPreviousStatement('CStatement')
     this.setNextStatement('CStatement')
 
-    this.setColour(190)
+    this.setColour(280)
     this.setTooltip(Blockly.Msg.RAILBLOCKS_PARALLEL_TOOLTIP)
 
     // We need at least two inputs, so we cheat in one that will always be there.
@@ -87,13 +87,30 @@ Blockly.Blocks.ParallelStatementD = {
 // Small helper function that adds another block in a dynamic branch statement.
 // Remember to clean up inputs, when deleting.
 function buildAnotherCondRow(index, block){
-  block.appendDummyInput(`COND_BLOCK${index}_TEXT`)
-      .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TEXT_START)
-      .appendField(new Blockly.FieldDropdown([[Blockly.Msg.RAILBLOCKS_CONDITIONAL_FIRST, 'ITEM1'], [Blockly.Msg.RAILBLOCKS_CONDITIONAL_SECOND, 'ITEM2']]), `CONTACT${index}`)
-      .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TEXT_MIDDLE)
-      .appendField(new Blockly.FieldDropdown(segName), `SEGMENT${index}`)
-      .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TEXT_END)
-  block.appendStatementInput(`COND_BLOCK${index}`)
+  const input = block.appendValueInput(`COND_BOOL${index}`)
+    .setCheck('Boolean')
+
+  if (index !== 0) {
+    input.appendField(new Blockly.FieldLabel('           ')) // empty placeholder
+  }
+
+  input
+  .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TEXT_START)
+  .appendField(
+    new Blockly.FieldDropdown([
+      [Blockly.Msg.RAILBLOCKS_CONDITIONAL_FIRST, 'ITEM1'],
+      [Blockly.Msg.RAILBLOCKS_CONDITIONAL_SECOND, 'ITEM2']
+    ]),
+    `CONTACT${index}`
+  )
+  .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TEXT_MIDDLE)
+  .appendField(new Blockly.FieldDropdown(segName), `SEGMENT${index}`)
+  .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TEXT_END_1)
+
+block.appendDummyInput(`COND_DUMMY${index}`)
+  .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TEXT_END_2)
+
+block.appendStatementInput(`COND_BLOCK${index}`)
 }
 
 // Dynamic branch statement
@@ -102,7 +119,6 @@ Blockly.Blocks.ConditionalStatementD = {
     // Append a named input which contains the +/- buttons and the text.
     this.appendDummyInput('BRANCH_ROOT')
         .appendField(new FieldPlusMinus(), 'PM_FIELD')
-        .appendField(Blockly.Msg.RAILBLOCKS_CONDITIONAL_TITLE_TEXT)
 
     // Only allow this block to follow statements and only allow statements to be appended to this.
     this.setPreviousStatement('CStatement')
@@ -140,8 +156,9 @@ Blockly.Blocks.ConditionalStatementD = {
     while (diff !== 0) {
       // Case when inputs have to be removed.
       if (diff > 0) {
+        this.removeInput(`COND_BOOL${this.currInputs}`)
+        this.removeInput(`COND_DUMMY${this.currInputs}`)
         this.removeInput(`COND_BLOCK${this.currInputs}`)
-        this.removeInput(`COND_BLOCK${this.currInputs}_TEXT`)
         this.currInputs--
         // Case when inputs have to be appended.
       } else if (diff < 0) {
@@ -154,144 +171,6 @@ Blockly.Blocks.ConditionalStatementD = {
   }
 }
 
-
-// Dynamic "set track" statement.
-Blockly.Blocks.TrackStatement = {
-  init: function () {
-    // Append an input that ends with a connector to the stop/direction+speed blocks.
-    // This input also contains the +/- field and the needed texts.
-    // Will be mutated later in updateShape.
-    this.appendValueInput('SET_TRACK')
-      .appendField(new FieldPlusMinus(), 'PM_FIELD')
-      .setCheck('CSetVector')
-      .appendField(Blockly.Msg.RAILBLOCKS_TRACK_TEXT_START, 'SET_TRACK_FIELD')
-
-    this.setPreviousStatement('CStatement')
-    this.setNextStatement('CStatement')
-
-    this.setColour(25)
-    this.setTooltip(Blockly.Msg.RAILBLOCKS_TRACK_TOOLTIP)
-
-    this.inputCount = 1
-    this.updateShape()
-  },
-
-  mutationToDom,
-
-  domToMutation,
-
-  updateShape: function () {
-    // Store current values for old fields and append default values for new fields to restore them later.
-    const values = []
-    for (let i = 0; i < this.inputCount; i++) {
-      values.push(
-        this.getField('DROPDOWN' + i)
-        // If the field is empty, which is true at the first pass,
-        // add the default value
-          ? this.getField('DROPDOWN' + i).getValue()
-          : 'ITEM1'
-      )
-    }
-
-    // Get the input that was defined in init, we'll remove from it and then append to it.
-    const valueInput = this.getInput('SET_TRACK')
-    const toRemove = []
-
-    // Store all existing field names from the value input...
-    for (let i = 0; i < valueInput.fieldRow.length; i++) {
-      const name = valueInput.fieldRow[i].name
-      if (!name || name[0] === 'D') { toRemove.push(name) }
-    }
-    // ... and remove all of them.
-    for (let i = 0; i < toRemove.length; i++) {
-      valueInput.removeField(toRemove[i])
-    }
-
-    // Add all dropdown fields such that the first one does not have a comma.
-    // Give them all names that we will use to restore the prior values.
-    for (let i = 0; i < this.inputCount; i++) {
-      if (i === 0) {
-        valueInput.appendField(new Blockly.FieldDropdown(
-          segName
-        ), 'DROPDOWN' + i)
-      } else {
-        valueInput.appendField(',')
-          .appendField(new Blockly.FieldDropdown(
-            segName
-          ), 'DROPDOWN' + i)
-      }
-      // After creating all dropdown fields, restore the saved values.
-      this.setFieldValue(values[i], 'DROPDOWN' + i)
-    }
-
-    // Append the last text.
-    valueInput.appendField(Blockly.Msg.RAILBLOCKS_TRACK_TEXT_END)
-
-    // Now the block looks like this:
-    // ValueInput["Set track" [Comma separated dropdown fields] "to: "] -<
-  }
-}
-
-// Almost the same but with text input fields and not dropdown fields.
-Blockly.Blocks.TrackStatementALT = {
-  init: function () {
-    this.appendValueInput('SET_TRACK')
-      .appendField(new FieldPlusMinus(), 'PM_FIELD')
-      .setCheck('CSetVector')
-      .appendField(Blockly.Msg.RAILBLOCKS_TRACK_TEXT_START, 'SET_TRACK_FIELD')
-    this.setPreviousStatement('CStatement')
-    this.setNextStatement('CStatement')
-    this.setInputsInline(false)
-    this.setColour(25)
-    this.setTooltip(Blockly.Msg.RAILBLOCKS_TRACK_TOOLTIP)
-
-    this.inputCount = 1
-    this.updateShape()
-  },
-
-  mutationToDom,
-
-  domToMutation,
-
-  updateShape: function () {
-    const values = []
-    for (let i = 0; i < this.inputCount; i++) {
-      values.push(
-        this.getField('TEXT' + i)
-          ? this.getField('TEXT' + i).getValue()
-          : ''
-      )
-    }
-
-    const valueInput = this.getInput('SET_TRACK')
-    const toRemove = []
-
-    for (let i = 0; i < valueInput.fieldRow.length; i++) {
-      const name = valueInput.fieldRow[i].name
-      if (!name || name[0] === 'T') { toRemove.push(name) }
-    }
-    for (let i = 0; i < toRemove.length; i++) {
-      valueInput.removeField(toRemove[i])
-    }
-
-    for (let i = 0; i < this.inputCount; i++) {
-      if (i === 0) {
-        valueInput.appendField(new Blockly.FieldTextInput(
-          'KH_ST_0', validatorSegment
-        ), 'TEXT' + i)
-      } else {
-        valueInput.appendField(',')
-          .appendField(new Blockly.FieldTextInput(
-            'KH_ST_0', validatorSegment
-          ), 'TEXT' + i)
-      }
-      this.setFieldValue(values[i], 'TEXT' + i)
-    }
-
-    valueInput.appendField(Blockly.Msg.RAILBLOCKS_TRACK_TEXT_END)
-  }
-}
-
 Blockly.Blocks.PointStatement = {
   init: function () {
     this.appendDummyInput('SET_POINT')
@@ -299,7 +178,7 @@ Blockly.Blocks.PointStatement = {
       .appendField(Blockly.Msg.RAILBLOCKS_POINT_TEXT_START, 'SET_POINT_FIELD')
     this.setPreviousStatement('CStatement')
     this.setNextStatement('CStatement')
-    this.setColour(0)
+    this.setColour(20)
     this.setTooltip(Blockly.Msg.RAILBLOCKS_POINT_TOOLTIP)
 
     this.inputCount = 1
@@ -311,48 +190,49 @@ Blockly.Blocks.PointStatement = {
   domToMutation,
 
   updateShape: function () {
-    const values = []
-    for (let i = 0; i < this.inputCount; i++) {
-      values.push(
-        this.getField('NUMBER' + i)
-          ? this.getField('NUMBER' + i).getValue()
-          : '0'
-      )
-    }
+    const branchOption = this.getFieldValue('BRANCH_OPTION')
 
-    const dummyInput = this.getInput('SET_POINT')
-    const toRemove = []
-
-    for (let i = 0; i < dummyInput.fieldRow.length; i++) {
-      const name = dummyInput.fieldRow[i].name
-      if (!name || name[0] === 'N' || name[0] === 'B') { toRemove.push(name) }
-    }
-    for (let i = 0; i < toRemove.length; i++) {
-      dummyInput.removeField(toRemove[i])
-    }
-
-    for (let i = 0; i < this.inputCount; i++) {
-      if (i === 0) {
-        dummyInput.appendField(new Blockly.FieldNumber(
-          0, 0, 29
-        ), 'NUMBER' + i)
-      } else {
-        dummyInput.appendField(',')
-          .appendField(new Blockly.FieldNumber(
-            0, 0, 29
-          ), 'NUMBER' + i)
+    let currentCount = 0
+      while (this.getInput('NUMBER_INPUT_' + currentCount)) {
+        currentCount++
       }
-      this.setFieldValue(values[i], 'NUMBER' + i)
-    }
 
+      // Remove the trailing dummy so new number inputs can stay before it.
+      if (this.getInput('POINT_END')) {
+        this.removeInput('POINT_END')
+      }
+
+      while (currentCount > this.inputCount) {
+        this.removeInput('NUMBER_INPUT_' + (currentCount - 1))
+        currentCount--
+      }
+
+      while (currentCount < this.inputCount) {
+        const input = this.appendValueInput('NUMBER_INPUT_' + currentCount)
+          .setCheck(['Number', 'int_range'])
+
+        if (currentCount !== 0) {
+          input.appendField(',')
+        }
+
+      // Only inject shadows when the input is newly created.
+      ensureShadow(this, 'NUMBER_INPUT_' + currentCount)
+      currentCount++
+    }
+    
     // Append the last portion of this block.
-    dummyInput.appendField(Blockly.Msg.RAILBLOCKS_POINT_TEXT_END)
+    this.appendDummyInput('POINT_END')
+      .appendField(Blockly.Msg.RAILBLOCKS_POINT_TEXT_END)
       .appendField(new Blockly.FieldDropdown(
         [
           [Blockly.Msg.RAILBLOCKS_POINT_STRAIGHT, 'ITEM1'],
           [Blockly.Msg.RAILBLOCKS_POINT_BRANCH, 'ITEM2']
         ]
       ), 'BRANCH_OPTION')
+
+    if (branchOption) {
+      this.setFieldValue(branchOption, 'BRANCH_OPTION')
+    }
   }
 }
 
@@ -363,7 +243,7 @@ Blockly.Blocks.LightStatement = {
       .appendField(Blockly.Msg.RAILBLOCKS_LIGHTS_TEXT_START, 'SET_LIGHT_FIELD')
     this.setPreviousStatement('CStatement')
     this.setNextStatement('CStatement')
-    this.setColour(60)
+    this.setColour(40)
     this.setTooltip(Blockly.Msg.RAILBLOCKS_LIGHTS_TOOLTIP)
 
     this.inputCount = 1
@@ -374,47 +254,61 @@ Blockly.Blocks.LightStatement = {
 
   domToMutation,
 
-  updateShape: function () {
-    const values = []
-    for (let i = 0; i < this.inputCount; i++) {
-      values.push(
-        this.getField('NUMBER' + i)
-          ? this.getField('NUMBER' + i).getValue()
-          : '0'
-      )
-    }
+    updateShape: function () {
+      const lightStatus = this.getFieldValue('LIGHT_STATUS')
 
-    const valueInput = this.getInput('SET_LIGHT')
-    const toRemove = []
-
-    for (let i = 0; i < valueInput.fieldRow.length; i++) {
-      const name = valueInput.fieldRow[i].name
-      if (!name || name[0] === 'N' || name[0] === 'L') { toRemove.push(name) }
-    }
-    for (let i = 0; i < toRemove.length; i++) {
-      valueInput.removeField(toRemove[i])
-    }
-
-    for (let i = 0; i < this.inputCount; i++) {
-      if (i === 0) {
-        valueInput.appendField(new Blockly.FieldNumber(
-          0, 0, 23
-        ), 'NUMBER' + i)
-      } else {
-        valueInput.appendField(',')
-          .appendField(new Blockly.FieldNumber(
-            0, 0, 23
-          ), 'NUMBER' + i)
+      let currentCount = 0
+      while (this.getInput('NUMBER_INPUT_' + currentCount)) {
+        currentCount++
       }
-      this.setFieldValue(values[i], 'NUMBER' + i)
+
+      // Remove the trailing dummy so new number inputs can stay before it.
+      if (this.getInput('LIGHT_END')) {
+        this.removeInput('LIGHT_END')
+      }
+
+      while (currentCount > this.inputCount) {
+        this.removeInput('NUMBER_INPUT_' + (currentCount - 1))
+        currentCount--
+      }
+
+      while (currentCount < this.inputCount) {
+        const input = this.appendValueInput('NUMBER_INPUT_' + currentCount)
+          .setCheck(['Number', 'int_range'])
+
+        if (currentCount !== 0) {
+          input.appendField(',')
+        }
+
+      // Only inject shadows when the input is newly created.
+      ensureShadow(this, 'NUMBER_INPUT_' + currentCount)
+      currentCount++
     }
 
-    valueInput.appendField(Blockly.Msg.RAILBLOCKS_LIGHTS_TEXT_END)
+    this.appendDummyInput('LIGHT_END')
+      .appendField(Blockly.Msg.RAILBLOCKS_LIGHTS_TEXT_END)
       .appendField(new Blockly.FieldDropdown(
         [
           [Blockly.Msg.RAILBLOCKS_LIGHTS_ON, 'ITEM1'],
           [Blockly.Msg.RAILBLOCKS_LIGHTS_OFF, 'ITEM2']
         ]
       ), 'LIGHT_STATUS')
-  }
+
+    if (lightStatus) {
+        this.setFieldValue(lightStatus, 'LIGHT_STATUS')
+     }
+    }
+}
+
+// Injects a int_number shadow into an input if nothing is connected yet
+export function ensureShadow(block, inputName) {
+  const input = block.getInput(inputName)
+  if (!input || input.connection.targetBlock()) return
+
+  const shadowBlock = block.workspace.newBlock('int_number')
+  shadowBlock.initSvg?.()
+  shadowBlock.setShadow(true)
+  shadowBlock.getField('NUM').setValue(0)
+  shadowBlock.render?.()
+  input.connection.connect(shadowBlock.outputConnection)
 }

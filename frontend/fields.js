@@ -20,6 +20,7 @@
 
 import * as Blockly from 'blockly/core'
 import { BlockSvg } from 'blockly/core'
+import { ensureShadow } from './dynamic_blocks'
 
 /**
  * Class for field that adds a Plus and Minus button that increment/decrement
@@ -120,6 +121,8 @@ export class FieldPlusMinus extends Blockly.Field {
       this,
       () => {
         this.plusButton_.setAttribute('font-weight', '900')
+        this.plusButton_.setAttribute('stroke', '#E4E4E4')
+        this.plusButton_.setAttribute('stroke-width', '0.75')
       }
     )
 
@@ -129,6 +132,8 @@ export class FieldPlusMinus extends Blockly.Field {
       this,
       () => {
         this.plusButton_.setAttribute('font-weight', '400')
+        this.plusButton_.setAttribute('stroke', 'none')
+        this.plusButton_.setAttribute('stroke-width', '0')
       }
     )
 
@@ -138,6 +143,8 @@ export class FieldPlusMinus extends Blockly.Field {
       this,
       () => {
         this.minusButton_.setAttribute('font-weight', '900')
+        this.minusButton_.setAttribute('stroke', '#E4E4E4')
+        this.minusButton_.setAttribute('stroke-width', '0.75')
       }
     )
 
@@ -147,6 +154,8 @@ export class FieldPlusMinus extends Blockly.Field {
       this,
       () => {
         this.minusButton_.setAttribute('font-weight', '400')
+        this.minusButton_.setAttribute('stroke', 'none')
+        this.minusButton_.setAttribute('stroke-width', '0')
       }
     )
   }
@@ -184,6 +193,7 @@ export class FieldPlusMinus extends Blockly.Field {
   increase_count () {
     this.sourceBlock_.inputCount++
     this.sourceBlock_.updateShape()
+    ensureShadow(this.sourceBlock_, 'NUMBER_INPUT_' + (this.sourceBlock_.inputCount - 1))
   }
 
   /**
@@ -203,3 +213,143 @@ export class FieldPlusMinus extends Blockly.Field {
   // eslint-disable-next-line no-unused-vars
   setValue (_0, _1) {}
 }
+
+/**
+ * Class that extends the blockly's single dropdown field to a multi-select dropdown.
+ */
+class FieldMultiSelectDropdown extends Blockly.FieldDropdown {
+  /**
+   * @param {Array<[string, string]>} options array of [value, item] pairs
+   * @param {Array<string>} value initially selected option values.
+   * @param {Function} [validator] optional validator function
+   */
+  constructor (options, value = [], validator) {
+    // FieldDropdown's constructor wants a menu generator.
+    // Pass it straight through so any internal FieldDropdown behavior that reads it still has something valid.
+    super(options, validator)
+    this.menuOptions_ = options.map(([val]) => [val, val])
+    this.value_ = this.doClassValidation_(value)
+    this.SERIALIZABLE = true
+    this.maxDisplayLength = Infinity
+  }
+
+  /**
+   * Construct a FieldMultiSelectDropdown from a JSON object.
+   */
+  static fromJson (options) {
+    return new FieldMultiSelectDropdown(options.options, options.value ?? [], options.validator)
+  }
+
+  /**
+   * Ensures the field's value is always an array containing only values that exist among the configured options.
+   */
+  doClassValidation_ (newValue) {
+    if (!Array.isArray(newValue)) {
+      return []
+    }
+
+    const validValues = new Set(this.menuOptions_.map(([val]) => val))
+    // remove duplicates and filtering for existing vals
+    return [...new Set(newValue)].filter((val) => validValues.has(val))
+  }
+
+  /**
+   * Text shown on the block face.
+   */
+  getText_ () {
+    if (!this.value_ || this.value_.length === 0) return Blockly.Msg.RAILBLOCKS_TRACK_NONE
+    return this.menuOptions_
+      .filter(([val]) => this.value_.includes(val))
+      .map(([val]) => val)
+      .join(', ')
+  }
+
+  /**
+   * Renders the popup content.
+   * Overrides FieldDropdown's default single-select menu with a scrollable list of checkboxes.
+   */
+  showEditor_ () {
+    const contentDiv = Blockly.DropDownDiv.getContentDiv()
+
+    // --- Scrollable checkbox list ---
+    const listContainer = document.createElement('div')
+    listContainer.style.maxHeight = '300px'
+    listContainer.style.overflowY = 'auto'
+    listContainer.addEventListener('change', this.onCheckboxChange_.bind(this))
+    this.listContainer_ = listContainer
+
+    contentDiv.appendChild(listContainer)
+    this.renderCheckboxRows_()
+
+    Blockly.DropDownDiv.showPositionedByField(this, this.dropdownDispose_.bind(this))
+  }
+
+  /**
+   * Builds the checkbox rows
+   */
+  renderCheckboxRows_ () {
+    const listContainer = this.listContainer_
+
+    this.menuOptions_.forEach(([label, val], index) => {
+      const row = document.createElement('label')
+      row.style.display = 'flex'
+      row.style.alignItems = 'center'
+      row.style.padding = '4px 7px'
+      row.style.cursor = 'pointer'
+      row.style.whiteSpace = 'nowrap'
+      row.style.borderRadius = '2px'
+      row.style.fontFamily = "'Helvetica Neue', Helvetica, Arial, sans-serif"
+      row.style.fontSize = '12px'
+ 
+      // colour hovered row
+      row.addEventListener('mouseenter', () => {
+        row.style.backgroundColor = 'rgba(0,0,0,0.1)'
+      })
+      row.addEventListener('mouseleave', () => {
+        row.style.backgroundColor = 'transparent'
+      })
+ 
+      const checkbox = document.createElement('input')
+      checkbox.type = 'checkbox'
+      checkbox.checked = this.value_.includes(val)
+      checkbox.dataset.index = index
+
+ 
+      const text = document.createElement('span')
+      text.textContent = label
+ 
+      row.appendChild(checkbox)
+      row.appendChild(text)
+      listContainer.appendChild(row)
+    })
+  }
+
+   /**
+   * Delegated handler for checkbox toggles inside the list container.
+   */
+  onCheckboxChange_ (event) {
+    const checkbox = event.target
+    if (!checkbox || checkbox.type !== 'checkbox') {
+      return
+    }
+ 
+    const [val] = this.menuOptions_[checkbox.dataset.index]
+    const current = new Set(this.value_)
+    if (checkbox.checked) {
+      current.add(val)
+    } else {
+      current.delete(val)
+    }
+    this.setValue([...current])
+    // Refresh the on-block text immediately.
+    this.forceRerender()
+  }
+ 
+  dropdownDispose_ () {
+    this.listContainer_ = null
+  }
+}
+
+Blockly.fieldRegistry.register('field_multiselectdropdown', FieldMultiSelectDropdown)
+
+export { FieldMultiSelectDropdown }

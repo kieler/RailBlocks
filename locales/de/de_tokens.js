@@ -39,6 +39,9 @@ export const de_tokens = {
   RAILBLOCKS_CONTACT_WAIT_FIRST: 'erster',
   RAILBLOCKS_CONTACT_WAIT_SECOND: 'zweiter',
 
+  RAILBLOCKS_INT_RANGE_TEXT: '%1 bis %2',
+  RAILBLOCKS_INT_RANGE_TOOLTIP: 'Erstellt eine Reihe von Zahlen.',
+
   RAILBLOCKS_TIME_WAIT_TEXT: 'Warte für %1 Sekunde(n)',
   RAILBLOCKS_TIME_WAIT_TOOLTIP: 'Tue nichts für eine bestimmte Zeit.',
 
@@ -53,7 +56,8 @@ export const de_tokens = {
   RAILBLOCKS_CONDITIONAL_SECOND: 'zweiter',
   RAILBLOCKS_CONDITIONAL_TEXT_START: 'Wenn',
   RAILBLOCKS_CONDITIONAL_TEXT_MIDDLE: 'Kontakt von',
-  RAILBLOCKS_CONDITIONAL_TEXT_END: 'zuerst ausgelöst wurde',
+  RAILBLOCKS_CONDITIONAL_TEXT_END_1: 'zuerst',
+  RAILBLOCKS_CONDITIONAL_TEXT_END_2: 'wurde',
   RAILBLOCKS_CONDITIONAL_TITLE_TEXT: 'Entweder Oder',
 
   RAILBLOCKS_PARALLEL_TEXT: 'Parallel',
@@ -65,9 +69,9 @@ export const de_tokens = {
   RAILBLOCKS_LIGHTS_ON: 'an',
   RAILBLOCKS_LIGHTS_OFF: 'aus',
 
-  RAILBLOCKS_TRACK_TEXT_START: 'Setze das Gleis',
-  RAILBLOCKS_TRACK_TEXT_END: 'auf',
-  RAILBLOCKS_TRACK_TOOLTIP: 'Setze alle ausgewählten Gleise auf eine bestimmte Geschwindigkeit und Richtung.\n' + 'Klicke auf das Plus / Minus Symbol, um die Anzahl der Gleisen zu steuern.',
+  RAILBLOCKS_TRACK_TEXT: 'Setze das Gleis %1 auf %2',
+  RAILBLOCKS_TRACK_NONE: '(leer)',
+  RAILBLOCKS_TRACK_TOOLTIP: 'Setze alle ausgewählten Gleise auf eine bestimmte Geschwindigkeit und Richtung.\n',
 
   RAILBLOCKS_POINT_TEXT_START: 'Setze die Weiche',
   RAILBLOCKS_POINT_TEXT_END: 'auf',
@@ -79,4 +83,6 @@ export const de_tokens = {
   RAILBLOCKS_WARNING_UNREACHABLE_WEAK: 'Blöcke nach diesem können vielleicht nicht erreicht werden, da sich eine Wiederholung innerhalb dieses Blocks befindet.',
   RAILBLOCKS_WARNING_EMPTY_INPUT: 'Dieser Block hat leere Felder und wird einen Syntaxfehler verursachen!',
   RAILBLOCKS_WARNING_UNUSED: 'Unbenutzter Block',
+  RAILBLOCKS_WARNING_PASSED: 'Der "passiert" Block kann momentan nicht in diesem Block genutzt werden.',
+  RAILBLOCKS_WARNING_UNSELECTED: 'Es wurde kein Gleis ausgewählt.',
 }
